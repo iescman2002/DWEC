@@ -1,60 +1,112 @@
-import './style.css'
-import heroImg from './assets/hero.png'
-import javascriptLogo from './assets/javascript.svg'
-import viteLogo from './assets/vite.svg'
-import { setupCounter } from './counter.js'
+// Bloque 2: Creación del catalogo inicial
 
-document.querySelector('#app').innerHTML = `
-<section id="center">
-  <div class="hero">
-    <img src="${heroImg}" class="base" width="170" height="179">
-    <img src="${javascriptLogo}" class="framework" alt="JavaScript logo"/>
-    <img src="${viteLogo}" class="vite" alt="Vite logo" />
-  </div>
-  <div>
-    <h1>Get started</h1>
-    <p>Edit <code>src/main.js</code> and save to test <code>HMR</code></p>
-  </div>
-  <button id="counter" type="button" class="counter"></button>
-</section>
-
-<div class="ticks"></div>
-
-<section id="next-steps">
-  <div id="docs">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#documentation-icon"></use></svg>
-    <h2>Documentation</h2>
-    <p>Your questions, answered</p>
-    <ul>
-      <li>
-        <a href="https://vite.dev/" target="_blank">
-          <img class="logo" src="${viteLogo}" alt="" />
-          Explore Vite
-        </a>
-      </li>
-      <li>
-        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-          <img class="button-icon" src="${javascriptLogo}" alt="">
-          Learn more
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div id="social">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#social-icon"></use></svg>
-    <h2>Connect with us</h2>
-    <p>Join the Vite community</p>
-    <ul>
-      <li><a href="https://github.com/vitejs/vite" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#github-icon"></use></svg>GitHub</a></li>
-      <li><a href="https://chat.vite.dev/" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#discord-icon"></use></svg>Discord</a></li>
-      <li><a href="https://x.com/vite_js" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#x-icon"></use></svg>X.com</a></li>
-      <li><a href="https://bsky.app/profile/vite.dev" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#bluesky-icon"></use></svg>Bluesky</a></li>
-    </ul>
-  </div>
-</section>
-
-<div class="ticks"></div>
-<section id="spacer"></section>
-`
-
-setupCounter(document.querySelector('#counter'))
+const catalogoInicial = [ // Se crea con const y no con let porque nunca va a ser modificado
+  {
+        Id: 1,
+        Nombre: "Baldurs Gate 3",
+        Plataforma: "PC",
+        Categoria: "RPG",
+        Precio: 60,
+        Estado: "nuevo-precintado",
+        Stock: 10
+  },
+  {
+      Id: 2,
+      Nombre: "Super Mario World",
+      Plataforma: "SNES",
+      Categoria: "Plataformas",
+      Precio: 35,
+      Estado: "usado-como-nuevo",
+      Stock: 4
+  },
+  {
+      Id: 3,
+      Nombre: "The Legend of Zelda: Ocarina of Time",
+      Plataforma: "N64",
+      Categoria: "Aventura",
+      Precio: 45,
+      Estado: "usado-caja-danada",
+      Stock: 3
+  },
+  {
+      Id: 4,
+      Nombre: "Pokemon Rojo",
+      Plataforma: "GAME BOY",
+      Categoria: "RPG",
+      Precio: 50,
+      Estado: "solo-cartucho",
+      Stock: 6
+  },
+  {
+      Id: 5,
+      Nombre: "Sonic the Hedgehog 2",
+      Plataforma: "MEGA DRIVE",
+      Categoria: "Plataformas",
+      Precio: 30,
+      Estado: "usado-como-nuevo",
+      Stock: 5
+  },
+  {
+      Id: 6,
+      Nombre: "Tekken 3",
+      Plataforma: "PS1",
+      Categoria: "Lucha",
+      Precio: 40,
+      Estado: "usado-caja-danada",
+      Stock: 2
+  },
+  {
+      Id: 7,
+      Nombre: "FIFA 98",
+      Plataforma: "PS1",
+      Categoria: "Deportes",
+      Precio: 20,
+      Estado: "solo-cartucho",
+      Stock: 7
+  },
+  {
+      Id: 8,
+      Nombre: "Tetris",
+      Plataforma: "GAME BOY",
+      Categoria: "Puzzle",
+      Precio: 25,
+      Estado: "nuevo-precintado",
+      Stock: 3
+  },
+  {
+      Id: 9,
+      Nombre: "Street Fighter II",
+      Plataforma: "SNES",
+      Categoria: "Lucha",
+      Precio: 35,
+      Estado: "solo-cartucho",
+      Stock: 8
+  },
+  {
+      Id: 10,
+      Nombre: "Metroid Prime",
+      Plataforma: "GameCube",
+      Categoria: "Aventura",
+      Precio: 40,
+      Estado: "usado-como-nuevo",
+      Stock: 4
+  },
+  {
+      Id: 11,
+      Nombre: "Gran Turismo 2",
+      Plataforma: "PS1",
+      Categoria: "Deportes",
+      Precio: 30,
+      Estado: "usado-caja-danada",
+      Stock: 5
+  },
+  {
+      Id: 12,
+      Nombre: "Chrono Trigger",
+      Plataforma: "SNES",
+      Categoria: "RPG",
+      Precio: 60,
+      Estado: "nuevo-precintado",
+      Stock: 2
+  }
+];
