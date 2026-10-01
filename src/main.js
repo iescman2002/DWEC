@@ -110,3 +110,27 @@ const catalogoInicial = [ // Se crea con const y no con let porque nunca va a se
       Stock: 2
   }
 ];
+
+// Bloque 3: Reglas de Negocio
+
+//////////////////// !!!!!!!!!!!!!!!!!! INCOMPLETO EL BLOQUE 3 TABLA A!!!! NO PASAR AL SIGUIENTE HASTA TERMINARLO.
+// Tabla A: Recargo o Descuento según Estado del Pxducto
+for (const juego of catalogoInicial) { // Se accede a cada juego
+    precioSegunEstado = modificarPrecioSegunEstado(juego.Precio,juego.Estado) // Precio Actualizado según el estado del juego
+    catalogo.Precio = precioSegunEstado // Actualizo el precio del objeto.
+}
+
+// Función Bloque 3 Tabla A:
+function modificarPrecioSegunEstado(precio, estado) {
+    // La función devolverá según el estado que reciba el precio modificado.
+    switch (estado) {
+        case "nuevo-precintado":
+            return precio * 1.25
+        case "usado-como-nuevo":
+            return precio
+        case "usado-caja-danada":
+            return precio * 0.85
+        case "solo-cartucho":
+            return precio * 0.70
+    }
+}
