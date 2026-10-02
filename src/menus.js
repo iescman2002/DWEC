@@ -13,7 +13,8 @@ export function menuPrincipal(){ // Uso export para poder llamarla desde otro ar
         opcion = Number(prompt("Introduzca una opción: "))
         switch (opcion) {
             case 1:
-                console.log("PRUEBA")
+                console.log("Ha elegido ver el catalogo:")
+                verCatalogo()
                 break;
             case 2:
                 break;
@@ -28,5 +29,28 @@ export function menuPrincipal(){ // Uso export para poder llamarla desde otro ar
             default:
                 console.log("Opción no válida.")
         }
-    } while (opcion !== 6)
+    } while (opcion !== 6) // Se deja de repetir el bucle una vez el usuario introduzca 6 (Salir).
+}
+
+function verCatalogo(){
+    let opcion
+        do { // Se ejecuta el menu constantemente
+        console.log("1. Ver Todo el Catálogo")
+        console.log("2. Filtrar por categoría")
+        console.log("3. Ver productos con Stock Bajo")
+        console.log("4. Volver al menú principal")
+        opcion = Number(prompt("Introduzca una opción: "))
+        switch (opcion) {
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break; 
+            default:
+                console.log("Opción no válida.")
+        }
+    } while (opcion !== 1 & opcion !==2 & opcion !==3 & opcion !==4) // Se deja de repetir el bucle cuando no la opcion no sea un numero entre el 1 y el 4
 }
