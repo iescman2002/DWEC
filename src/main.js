@@ -1,3 +1,6 @@
+// Importamos las funciones de otros archivos:
+import {menuPrincipal} from './menus.js'
+
 // Bloque 2: Creación del catalogo inicial
 
 const catalogoInicial = [ // Se crea con const y no con let porque el catalogo nunca va a ser modificado (sus objetos sí pero eso no afecta al const)
@@ -132,3 +135,7 @@ function modificarPrecioSegunEstado(precio, estado) {
             return precio * 0.70
     }
 }
+
+// Menú Principal:
+console.log("Bienvenido al Menú Inicial: ")
+menuPrincipal()
