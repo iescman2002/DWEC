@@ -1,3 +1,6 @@
+// Importamos las funciones de otros archivos:
+import {productosConStockBajo} from './vistas.js'
+
 // Bloque 4: Flujo de la aplicación y Menú
 
 export function menuPrincipal(catalogo){ // Uso export para poder llamarla desde otro archivo
@@ -47,8 +50,10 @@ function verCatalogo(catalogo){
             case 2:
                 break;
             case 3:
+                console.log(productosConStockBajo(catalogo))
                 break;
             case 4:
+                console.log("Ha elegido volver al menú principal:")
                 break; 
             default:
                 console.log("Opción no válida.")
