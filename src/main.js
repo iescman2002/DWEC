@@ -138,4 +138,4 @@ function modificarPrecioSegunEstado(precio, estado) {
 
 // Menú Principal:
 console.log("Bienvenido al Menú Inicial: ")
-menuPrincipal()
+menuPrincipal(catalogoInicial)
