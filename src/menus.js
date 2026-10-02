@@ -1,6 +1,6 @@
 // Bloque 4: Flujo de la aplicación y Menú
 
-export function menuPrincipal(catalogoInicial){ // Uso export para poder llamarla desde otro archivo
+export function menuPrincipal(catalogo){ // Uso export para poder llamarla desde otro archivo
     let opcion; // Defino la función como una variable con un valor que cambiará (let)
     
     do { // Se ejecuta el menu constantemente
@@ -14,7 +14,7 @@ export function menuPrincipal(catalogoInicial){ // Uso export para poder llamarl
         switch (opcion) {
             case 1:
                 console.log("Ha elegido ver el catalogo:")
-                verCatalogo(catalogoInicial)
+                verCatalogo(catalogo)
                 break;
             case 2:
                 break;
@@ -32,7 +32,7 @@ export function menuPrincipal(catalogoInicial){ // Uso export para poder llamarl
     } while (opcion !== 6) // Se deja de repetir el bucle una vez el usuario introduzca 6 (Salir).
 }
 
-function verCatalogo(catalogoInicial){
+function verCatalogo(catalogo){
     let opcion
         do { // Se ejecuta el menu constantemente
         console.log("1. Ver Todo el Catálogo")
@@ -42,7 +42,7 @@ function verCatalogo(catalogoInicial){
         opcion = Number(prompt("Introduzca una opción: "))
         switch (opcion) {
             case 1:
-                console.log(catalogoInicial)
+                console.log(catalogo)
                 break;
             case 2:
                 break;

@@ -116,10 +116,15 @@ const catalogoInicial = [ // Se crea con const y no con let porque el catalogo n
 
 // Bloque 3: Reglas de Negocio
 
-// Bucle encargado de actualizar los precios de los juegos según estado y unidad:
+// 3.1 (Bloque 3 Tabla A) Actualizo los precios de los juegos del catalogo Inicial según su estado:
 for (const juego of catalogoInicial) { // Se accede a cada juego 
     juego.Precio = modificarPrecioSegunEstado(juego.Precio,juego.Estado) // Actualizo el precio según el estado del juego
 }
+// 3.2 Creo un catalogoActualizado donde los juegos tendrán los mismos atributos que juego a excepcion 
+const catalogoActualizado = catalogoInicial.map(juego => ({ // Extraigo los datos para rellenarlo de los objetos (juego) usando map
+    ...juego, // Copio todos los atributos iniciales del juego (usando los ...)
+    StockBajo: avisarStockBajo(juego) // Si el stock es bajo (<3) asignamos true al nuevo atributo StockBajo, sino pues true
+}))
 
 // Función Bloque 3 Tabla A:
 function modificarPrecioSegunEstado(precio, estado) {
@@ -135,7 +140,12 @@ function modificarPrecioSegunEstado(precio, estado) {
             return precio * 0.70
     }
 }
+// Función Bloque 3 Tabla C:
+function avisarStockBajo(juego) {
+    return juego.Stock < 3 // Devuelve true si el Stock es bajo, false si tiene stock suficiente
+}
+
 
 // Menú Principal:
 console.log("Bienvenido al Menú Inicial: ")
-menuPrincipal(catalogoInicial)
+menuPrincipal(catalogoActualizado)
