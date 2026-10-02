@@ -1,6 +1,6 @@
 // Bloque 2: Creación del catalogo inicial
 
-const catalogoInicial = [ // Se crea con const y no con let porque nunca va a ser modificado
+const catalogoInicial = [ // Se crea con const y no con let porque el catalogo nunca va a ser modificado (sus objetos sí pero eso no afecta al const)
   {
         Id: 1,
         Nombre: "Baldurs Gate 3",
@@ -113,11 +113,9 @@ const catalogoInicial = [ // Se crea con const y no con let porque nunca va a se
 
 // Bloque 3: Reglas de Negocio
 
-//////////////////// !!!!!!!!!!!!!!!!!! INCOMPLETO EL BLOQUE 3 TABLA A!!!! NO PASAR AL SIGUIENTE HASTA TERMINARLO.
-// Tabla A: Recargo o Descuento según Estado del Pxducto
-for (const juego of catalogoInicial) { // Se accede a cada juego
-    precioSegunEstado = modificarPrecioSegunEstado(juego.Precio,juego.Estado) // Precio Actualizado según el estado del juego
-    catalogo.Precio = precioSegunEstado // Actualizo el precio del objeto.
+// Bucle encargado de actualizar los precios de los juegos según estado y unidad:
+for (const juego of catalogoInicial) { // Se accede a cada juego 
+    juego.Precio = modificarPrecioSegunEstado(juego.Precio,juego.Estado) // Actualizo el precio según el estado del juego
 }
 
 // Función Bloque 3 Tabla A:
