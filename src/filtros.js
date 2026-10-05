@@ -33,3 +33,13 @@ export function productosConStockBajo(catalogo){
         juego.StockBajo
     ))
 }
+
+// Busqueda por ID de un juego
+export function buscarProductoPorId(catalogo, idJuego) {
+    return catalogo.find(juego => juego.Id === idJuego) ?? "Juego no encontrado." // Si se ha encontrado la id del juego en el catalogo, devuelve el juego. Sino, devuelve Juego no encontrado
+}
+// Busqueda por título de un juego
+export function buscarProductoPorTitulo(catalogo, tituloABuscar) {
+    // trabajo con los titulos tanto en el catalogo como el que le paso en minusculas para facilitar la busqueda de los títulos
+    return catalogo.find(juego => juego.Nombre.toLowerCase().includes(tituloABuscar.toLowerCase())) ?? "Juego no encontrado." // Si se ha encontrado un juego que contenga el titulo buscado (no necesariamente todo) dentro del Nombre del juego lo devuelve, sino devuelve juego no encontrado
+}

@@ -1,8 +1,5 @@
 // Importamos las funciones de otros archivos:
-import {productosConStockBajo} from './filtros.js'
-import {productosPorCategoria} from './filtros.js'
-import {juegosConLaCategoriaEscogida} from './filtros.js'
-
+import {juegosConLaCategoriaEscogida, productosPorCategoria, buscarProductoPorTitulo, buscarProductoPorId, productosConStockBajo} from './filtros.js'
 // Bloque 4: Flujo de la aplicación y Menú
 
 export function menuPrincipal(catalogo){ // Uso export para poder llamarla desde otro archivo
@@ -22,6 +19,8 @@ export function menuPrincipal(catalogo){ // Uso export para poder llamarla desde
                 verCatalogo(catalogo)
                 break;
             case 2:
+                console.log("Ha elegido buscar un producto: ")
+                menuBuscarProducto(catalogo)
                 break;
             case 3:
                 break;
@@ -82,4 +81,30 @@ function mostrarSeleccionCategoria(catalogo, categorias){
 
 function juegosFiltradosPorCategoria(juegos) {
     console.log(juegos)
+}
+
+// Menu Para buscar produtos
+function menuBuscarProducto(catalogo) {
+    let opcion;
+    do {
+    console.log("1. Por Id.")
+    console.log("2. Por el título parcial.")
+    console.log("3. Volver al menú principal.")
+    opcion = Number(prompt("Introduzca como quiere buscar por el producto: "))
+        switch (opcion) {
+            case 1:
+                console.log("Ha elegido buscar por el Id:")
+                const idBusqueda = Number(prompt("Introduzca a continuación el Id: "))
+                console.log(buscarProductoPorId(catalogo, idBusqueda))
+                opcion = 3;
+                break;
+            case 2:
+                console.log("Ha elegido buscar por el titulo: ")
+                const tituloBusqueda = prompt("Introduzca a continuación lo que sepas del título: ")
+                buscarProductoPorTitulo(catalogo, tituloBusqueda)
+                console.log(buscarProductoPorTitulo(catalogo,tituloBusqueda))
+                opcion = 3;
+                break;
+        }
+    } while (opcion !==3)
 }
