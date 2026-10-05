@@ -42,7 +42,7 @@ function ajustarPrecioFinal(juego, cantidadComprada) {
 }
 
 // funcion que actualiza stock tras venta
-function actualizarStock(juego, nuevoStock) {
+export function actualizarStock(juego, nuevoStock) {
     juego.Stock = nuevoStock
     // Si el stock del juego pasa a ser < 3 lo marcamos como bajo stock
     if (juego.Stock < 3) {

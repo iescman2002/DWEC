@@ -1,7 +1,6 @@
 // Importamos las funciones de otros archivos:
 import {juegosConLaCategoriaEscogida, productosPorCategoria, buscarProductoPorTitulo, buscarProductoPorId, productosConStockBajo} from './filtros.js'
-import {registrarVenta} from './ventas.js'
-import {verInformeDeCaja} from './ventas.js'
+import {actualizarStock, verInformeDeCaja, registrarVenta} from './ventas.js'
 // Bloque 4: Flujo de la aplicación y Menú
 
 export function menuPrincipal(catalogo){ // Uso export para poder llamarla desde otro archivo
@@ -29,8 +28,11 @@ export function menuPrincipal(catalogo){ // Uso export para poder llamarla desde
                 menuRegistrarVenta(catalogo)
                 break;
             case 4:
+                console.log("Ha elegido reponer stock de un producto:")
+                menuReponerStock(catalogo)
                 break;
             case 5:
+                console.log("Ha elegido ver el Informe de la Caja:")
                 verInformeDeCaja()
                 break;
             case 6: 
@@ -124,4 +126,19 @@ function menuRegistrarVenta(catalogo) {
     // Teniendo el idJuego obtengo el juego para el registroVenta
     const producto = catalogo.find(juego => juego.Id === idJuego)
     registrarVenta(producto, cantCompra)
+}
+
+// Menu Reponer Stock
+function menuReponerStock(catalogo) {
+    // Imprimimos los productos
+    console.log(catalogo)
+    // Obtenemos el producto a actualizar
+    const idProducto = Number(prompt("Introduce el Id del producto a reponer:"))
+    const producto = catalogo.find(juego => juego.Id === idProducto)
+    // Y la cantidad
+    const cantReponer = Number(prompt("Introduce la cantidad de stock que va a reponer:"))
+    
+    // Y actualizamos el stock
+    actualizarStock(producto, producto.Stock + cantReponer)
+    console.log("Stock actualizado")
 }
