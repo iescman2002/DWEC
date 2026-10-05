@@ -1,5 +1,7 @@
 // Importamos las funciones de otros archivos:
 import {juegosConLaCategoriaEscogida, productosPorCategoria, buscarProductoPorTitulo, buscarProductoPorId, productosConStockBajo} from './filtros.js'
+import {registrarVenta} from './ventas.js'
+import {verInformeDeCaja} from './ventas.js'
 // Bloque 4: Flujo de la aplicación y Menú
 
 export function menuPrincipal(catalogo){ // Uso export para poder llamarla desde otro archivo
@@ -23,10 +25,13 @@ export function menuPrincipal(catalogo){ // Uso export para poder llamarla desde
                 menuBuscarProducto(catalogo)
                 break;
             case 3:
+                console.log("Ha elegido registrar una venta:")
+                menuRegistrarVenta(catalogo)
                 break;
             case 4:
                 break;
             case 5:
+                verInformeDeCaja()
                 break;
             case 6: 
                 break;
@@ -79,6 +84,7 @@ function mostrarSeleccionCategoria(catalogo, categorias){
     juegosFiltradosPorCategoria(juegosConLaCategoriaEscogida(catalogo, categoriaEscogida))
 }
 
+// Devuelve los juegos filtrados por categoría
 function juegosFiltradosPorCategoria(juegos) {
     console.log(juegos)
 }
@@ -107,4 +113,15 @@ function menuBuscarProducto(catalogo) {
                 break;
         }
     } while (opcion !==3)
+}
+
+// Menu Registrar Venta
+function menuRegistrarVenta(catalogo) {
+    // Imprimo los juegos del catalogo para ver cual voy a registrar:
+    console.log(catalogo)
+    const idJuego = Number(prompt("Introduzca el Id del juego del cual se va a realizar la compra:"))
+    const cantCompra = Number(prompt("Introduzca cuantos juegos va a comprar:"))
+    // Teniendo el idJuego obtengo el juego para el registroVenta
+    const producto = catalogo.find(juego => juego.Id === idJuego)
+    registrarVenta(producto, cantCompra)
 }
