@@ -1,6 +1,6 @@
 // Importamos las funciones de otros archivos:
 import {juegosConLaCategoriaEscogida, productosPorCategoria, buscarProductoPorTitulo, buscarProductoPorId, productosConStockBajo} from './filtros.js'
-import {actualizarStock, verInformeDeCaja, registrarVenta} from './ventas.js'
+import {ventas, actualizarStock, registrarVenta, registroVentasTotales} from './ventas.js'
 // Bloque 4: Flujo de la aplicación y Menú
 
 export function menuPrincipal(catalogo){ // Uso export para poder llamarla desde otro archivo
@@ -33,7 +33,7 @@ export function menuPrincipal(catalogo){ // Uso export para poder llamarla desde
                 break;
             case 5:
                 console.log("Ha elegido ver el Informe de la Caja:")
-                verInformeDeCaja()
+                menuInformeCaja()
                 break;
             case 6: 
                 break;
@@ -69,7 +69,7 @@ function verCatalogo(catalogo){
             default:
                 console.log("Opción no válida.")
         }
-    } while (opcion !== 1 & opcion !==2 & opcion !==3 & opcion !==4) // Se deja de repetir el bucle cuando no la opcion no sea un numero entre el 1 y el 4
+    } while (opcion < 1 || opcion > 4) // Se deja de repetir el bucle cuando no la opcion no sea un numero entre el 1 y el 4
 }
 
 // Subcatalogo para elegir las categorias:
@@ -125,7 +125,7 @@ function menuRegistrarVenta(catalogo) {
     const cantCompra = Number(prompt("Introduzca cuantos juegos va a comprar:"))
     // Teniendo el idJuego obtengo el juego para el registroVenta
     const producto = catalogo.find(juego => juego.Id === idJuego)
-    registrarVenta(producto, cantCompra)
+    registrarVenta(catalogo, producto, cantCompra)
 }
 
 // Menu Reponer Stock
@@ -141,4 +141,25 @@ function menuReponerStock(catalogo) {
     // Y actualizamos el stock
     actualizarStock(producto, producto.Stock + cantReponer)
     console.log("Stock actualizado")
+}
+
+// Menu Informe de Caja
+function menuInformeCaja() {
+    let opcion;
+    do {
+        console.log("1. Consultar todas las ventas de la sesión.")
+        console.log("2. Consultar el Informe de la Caja.")
+        console.log("3. Volver al menú principal.")
+        opcion = Number(prompt("Introduce "))
+        switch(opcion) {
+            case 1:
+                console.log(ventas)
+                opcion = 3;
+                break;
+            case 2:
+                console.log(registroVentasTotales)
+                opcion = 3;
+                break;
+        }
+    } while (opcion !==3)
 }
