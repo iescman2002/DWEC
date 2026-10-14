@@ -113,7 +113,7 @@ const catalogoInicial = [ // Se crea con const y no con let porque el catalogo n
 // Bloque 3: Reglas de Negocio
 
 // 3.2 Creo un catalogoActualizado donde los juegos tendrán los mismos atributos que juego a excepcion de StockBajo
-export const catalogoActualizado = catalogoInicial.map(juego => ({ // Extraigo los datos para rellenarlo de los objetos (juego) usando map
+export let catalogoActualizado = catalogoInicial.map(juego => ({ // Extraigo los datos para rellenarlo de los objetos (juego) usando map
     ...juego, // Copio todos los atributos iniciales del juego (usando los ...)
     Precio: modificarPrecioSegunEstado(juego.Precio,juego.Estado), // Actualizo el precio según el estado del juego
     StockBajo: avisarStockBajo(juego) // Si el stock es bajo (<3) asignamos true al nuevo atributo StockBajo, sino pues true
@@ -138,3 +138,31 @@ function avisarStockBajo(juego) {
     return juego.Stock < 3 // Devuelve true si el Stock es bajo, false si tiene stock suficiente
 }
 
+// Extra: Ordenar por un criterio
+export function ordenarCatalogoPorCriterioNumerico(catalogo, criterio, orden){
+    // Modificamos el catalogo catalogoActualizado (que es el que le pasamos y el que tiene let) con el nuevo orden:
+    catalogo.sort((producto1, producto2) => { // Recorro todos el catalogo comparando el producto1 con el producto2
+        // Si ordeno de menor a mayor
+        if (orden===1) {
+            return Number(producto1[criterio]) - Number(producto2[criterio]) // Comparo solo los atributos que le pasamos (criterio) de cada producto 
+        }
+        // Si ordeno de mayor a menor
+        else {
+            return Number(producto2[criterio]) - Number(producto1[criterio])
+        }
+    })
+}
+export function ordenarCatalogoPorCriterioLetras(catalogo, criterio, orden){
+    // Modificamos el catalogo catalogoActualizado (que es el que le pasamos y el que tiene let) con el nuevo orden:
+    catalogo.sort((producto1, producto2) => { // Recorro todos el catalogo comparando el producto1 con el producto2
+        // Si ordeno de menor a mayor
+        if (orden===1) {
+            return producto1[criterio].localeCompare(producto2[criterio]) // Comparo solo los atributos que le pasamos (criterio) de cada producto 
+        }
+        // Si ordeno de mayor a menor
+        else {
+            // localeCompare hace una comparación de letras para comparar Alfabeticamente.
+            return producto2[criterio].localeCompare(producto1[criterio])
+        }
+    })
+}
