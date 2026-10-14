@@ -116,7 +116,6 @@ function menuBuscarProducto(catalogo) {
             case 2:
                 console.log("Ha elegido buscar por el titulo: ")
                 const tituloBusqueda = prompt("Introduzca a continuación lo que sepas del título: ")
-                buscarProductoPorTitulo(catalogo, tituloBusqueda)
                 console.log(buscarProductoPorTitulo(catalogo,tituloBusqueda))
                 opcion = 3;
                 break;
