@@ -1,18 +1,21 @@
 // Importamos las funciones de otros archivos:
 import {juegosConLaCategoriaEscogida, productosPorCategoria, buscarProductoPorTitulo, buscarProductoPorId, productosConStockBajo} from './filtros.js'
 import {ventas, actualizarStock, registrarVenta, registroVentasTotales} from './ventas.js'
+import {ordenarCatalogoPorCriterioNumerico, ordenarCatalogoPorCriterioLetras} from './catalogos.js'
 // Bloque 4: Flujo de la aplicación y Menú
 
 export function menuPrincipal(catalogo){ // Uso export para poder llamarla desde otro archivo
     let opcion; // Defino la función como una variable con un valor que cambiará (let)
     
     do { // Se ejecuta el menu constantemente
+        console.log("¡Bienvenido al Menú Principal!")
         console.log("1. Ver Catálogo")
         console.log("2. Buscar Producto")
         console.log("3. Registrar una Venta")
         console.log("4. Reponer Stock")
         console.log("5. Informe de Caja")
-        console.log("6. Salir")
+        console.log("6. Ordenar Catálogo")
+        console.log("7. Salir")
         opcion = Number(prompt("Introduzca una opción: "))
         switch (opcion) {
             case 1:
@@ -35,12 +38,16 @@ export function menuPrincipal(catalogo){ // Uso export para poder llamarla desde
                 console.log("Ha elegido ver el Informe de la Caja:")
                 menuInformeCaja()
                 break;
-            case 6: 
+            case 6:
+                console.log("Ha elegido ordenar el catalogo:")
+                menuOrdenarCatalogo(catalogo)
+                break;
+            case 7: 
                 break;
             default:
                 console.log("Opción no válida.")
         }
-    } while (opcion !== 6) // Se deja de repetir el bucle una vez el usuario introduzca 6 (Salir).
+    } while (opcion !== 7) // Se deja de repetir el bucle una vez el usuario introduzca 7 (Salir).
 }
 
 function verCatalogo(catalogo){
@@ -109,7 +116,6 @@ function menuBuscarProducto(catalogo) {
             case 2:
                 console.log("Ha elegido buscar por el titulo: ")
                 const tituloBusqueda = prompt("Introduzca a continuación lo que sepas del título: ")
-                buscarProductoPorTitulo(catalogo, tituloBusqueda)
                 console.log(buscarProductoPorTitulo(catalogo,tituloBusqueda))
                 opcion = 3;
                 break;
@@ -162,4 +168,57 @@ function menuInformeCaja() {
                 break;
         }
     } while (opcion !==3)
+}
+
+// Menu Ordenar Cátalogo
+function menuOrdenarCatalogo(catalogo) {
+    // Obtener los criterios (atributos de cada producto) por los que puedo buscar
+    const criterios = Object.keys(catalogo[0]) // Object.keys extrae los atributos del objeto catalogo[0]
+    // Los imprimo y los muestro
+    console.log("De los siguientes criterios: ")
+    criterios.forEach((criterio, posicion) => {
+        console.log(`${posicion+1}. ${criterio}`)
+    })
+    let posicionCriterioABuscar = -1;
+    do {
+        posicionCriterioABuscar = Number(prompt("Indique por cual quieres ordenar o Introduzca 0 para salir:"))-1
+        if (posicionCriterioABuscar !== -1) {
+            // Guardo el criterio a ordenar:
+            const criterioAOrdenar = criterios[posicionCriterioABuscar]
+            let ordenBusqueda = 0
+
+            switch (criterioAOrdenar) {
+                case "Id":
+                case "Precio":
+                case "Stock":
+                    do {
+                        ordenBusqueda = Number(prompt("Introduzca 1 si quiere ordenarlo de Menor a Mayor (0,1,2..) o Introduzca 2 si quiere ordenarlo de Mayor a Menor (2,1,0...)"))
+                    } while (ordenBusqueda !== 1 && ordenBusqueda !== 2)
+                    ordenarCatalogoPorCriterioNumerico(catalogo, criterioAOrdenar, ordenBusqueda)
+                    posicionCriterioABuscar = -1;
+                    break;
+                case "Nombre":
+                case "Plataforma":
+                case "Categoria":
+                case "Estado":
+                    ordenBusqueda = 0     
+                    do {
+                        ordenBusqueda = Number(prompt("Introduzca 1 si quiere ordenarlo de Menor a Mayor (A, B, C..) o Introduzca 2 si quiere ordenarlo de Mayor a Menor (Z,X,Y...)"))
+                    } while (ordenBusqueda !== 1 && ordenBusqueda !== 2)
+                    ordenarCatalogoPorCriterioLetras(catalogo, criterioAOrdenar, ordenBusqueda)
+                    posicionCriterioABuscar = -1;
+                    break;
+                case "StockBajo":
+                    ordenBusqueda = 0
+                    do {
+                        ordenBusqueda = Number(prompt("Introduzca 1 si quiere ordenarlo de False a True o Introduzca 2 si quiere ordenarlo de True a False"))
+                    } while (ordenBusqueda !== 1 && ordenBusqueda !== 2)
+                    // En StockBajo lo ordeno como criterio Numerico porque estoy casteando dentro de la función los datos a Numeric
+                    // Entonces si es True valdrá 1, y si es False valdrá 0.
+                    ordenarCatalogoPorCriterioNumerico(catalogo, criterioAOrdenar, ordenBusqueda)
+                    posicionCriterioABuscar = -1;
+                    break;
+            }
+        }
+    } while (posicionCriterioABuscar !== -1);
 }

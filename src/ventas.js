@@ -51,18 +51,23 @@ export function registrarVenta(catalogo, producto, cantidad) {
     // 1. Válido que haya stock suficiente para hacer la operación
     if (validacionStockSuficiente(producto.Stock, cantidad) === true) {
         // 2. Añado al registro de ventas la que estoy haciendo
-        ventas.push({
+        const nuevaVenta = {
             IdVenta: ventas.length+1, // El IdVenta es = al tamaño del registro de ventas +1 (si hay 5 ventas el id de venta que registramos será la 5+1)
             IdProducto: producto.Id,
             CantidadComprada: cantidad,
             // En el precio total es donde aplico las tablas A y B del Bloque 3
             PrecioTotal: ajustarPrecioFinal(producto, cantidad)
-        })
+        }
+
+        ventas.push(nuevaVenta)
         // 3. Actualizo el stock del juego tras la compra del productoQ
         actualizarStock(producto, producto.Stock-cantidad)
         // 4. Y lo añado al registro de ventas totales:
         informarNuevaVenta(catalogo)
         console.log("Se ha registrado la venta correctamente.")
+        console.log("Ticket de venta:")
+        console.log(`Venta Nº ${nuevaVenta.IdVenta}. Producto ${nuevaVenta.IdProducto}: ${producto.Nombre}.Cantidad comprada: ${nuevaVenta.CantidadComprada}.`)
+        console.log(`Cantidad comprada: ${nuevaVenta.CantidadComprada}. Coste Total: ${nuevaVenta.PrecioTotal}`)
     }
     else {
         console.log("No hay stock suficiente para realizar la venta.")
@@ -92,6 +97,9 @@ function ajustarPrecioFinal(juego, cantidadComprada) {
     }
     else if (cantidadComprada >= 4) {
         return (juego.Precio * cantidadComprada) * 0.90; // Si compra 4 o más se aplica un descuento del 10%
+    }
+    else if (cantidadComprada >= 6) {
+        return (juego.Precio * cantidadComprada) * 0.85;
     }
 }
 
