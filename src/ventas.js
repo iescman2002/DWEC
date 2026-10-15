@@ -98,6 +98,9 @@ function ajustarPrecioFinal(juego, cantidadComprada) {
     else if (cantidadComprada >= 4) {
         return (juego.Precio * cantidadComprada) * 0.90; // Si compra 4 o más se aplica un descuento del 10%
     }
+    else if (cantidadComprada >= 6) {
+        return (juego.Precio * cantidadComprada) * 0.85;
+    }
 }
 
 // funcion que actualiza stock tras venta
