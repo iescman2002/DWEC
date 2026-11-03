@@ -59,6 +59,30 @@ export class Columna {
   // 7 · ordenadas(): un array NUEVO ordenado: primero prioridad alta (usa t.peso), y a igual
   //     prioridad, el límite más cercano; las que no tienen límite, al final.
   //     Pista: [...this.#tareas].sort((a, b) => …) — ¿por qué la copia?
+  ordenadas() {
+    const ordenadasPorPeso = [...this.#tareas].sort((a,b) => {
+      // Ordeno por peso de mayor a menor
+      if (b.peso - a.peso !== 0) {
+        return b.peso - a.peso;
+      }
+      // Si tienen el mismo peso (b.peso - a.peso === 0), ordeno por limite más cercano:
+      // Ordeno las fechas de menor a mayor (mas cercas de expirar)
+      // Casuisticas:
+      // 1: Si las dos tareas tienen limite:
+      if (a.limite !== null && b.limite !== null) {
+        return a.limite - b.limite; // Ordena normal.
+      }
+      // 2: Si la tarea a no tiene limite:
+      else if (a.limite === null) {
+        return b.limite - a.limite; // Prioriza la tarea B
+      }
+      // 3: Si la tarea b no tiene limite:
+      else if (b.limite === null) {
+        return a.limite - b.limite; // Prioriza la tarea A
+      }
+    });
+    return ordenadasPorPeso;
+  }
 }
 
 // Comprueba con:  docker compose run --rm web npm test 3-columna
