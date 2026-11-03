@@ -43,8 +43,19 @@ export class Columna {
   }
   // 5 · quitar(id): la saca del array y la devuelve · Error («… no está …») si no la encuentra
   //     Pista: findIndex + splice
+  quitar(id) {
+    const posicion = this.#tareas.findIndex(tarea => tarea.id === id);
+    if (posicion === -1) {
+      throw new Error("El id introducido no está en la lista de tareas.")
+    }
+    const tareaAEliminar = this.#tareas[posicion];
+    this.#tareas.splice(posicion, 1);
+    return tareaAEliminar;
+  }
   // 6 · tiene(id): true / false. Pista: some
-
+  tiene (id) {
+    return this.#tareas.some(tarea => tarea.id === id);
+  }
   // 7 · ordenadas(): un array NUEVO ordenado: primero prioridad alta (usa t.peso), y a igual
   //     prioridad, el límite más cercano; las que no tienen límite, al final.
   //     Pista: [...this.#tareas].sort((a, b) => …) — ¿por qué la copia?
