@@ -12,11 +12,11 @@ export class TareaRecurrente extends Tarea {
     super(titulo,prioridad,limite);
     // 3 · cadaDias tiene que ser un entero ≥ 1 → si no, RangeError.
     //     Pista: Number.isInteger
-    if (!Number.isInteger(cadaDias) || cadaDias == 0) { // Comparo si cadaDias es == 0 porque la función is Integer devuelve 0 como entero y quiero los > 1
+    if (!Number.isInteger(cadaDias) || cadaDias === 0) { // Comparo si cadaDias es == 0 porque la función is Integer devuelve 0 como entero y quiero los > 1
       throw new RangeError("El valor de cadaDias no es un entero (<1).");
     }
     // 4 · Una recurrente sin límite no tiene sentido → si this.limite es null, TypeError.
-    if (this.limite == null) {
+    if (this.limite === null) {
       throw new TypeError("Debe de existir un limite. No puede ser null.");
     }
     // 5 · Guarda this.cadaDias.
