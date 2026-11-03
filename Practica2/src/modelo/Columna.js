@@ -28,7 +28,19 @@ export class Columna {
   }
   // 4 · añadir(tarea): TypeError si no es instanceof Tarea · Error («… está llena …») si está
   //     llena · si no, la guarda y la devuelve
-
+  añadir(tarea) {
+    
+    if (!(tarea instanceof Tarea)) { // Si la tarea que le pasamos no contiene la estructura del objeto Tarea:
+      throw new TypeError("La tarea pasada no es instancia de Tarea.")
+    }
+    else if (this.llena) { // Si la cola está llena
+      throw new Error("La cola de tareas está llena.")
+    }
+    else {
+      this.#tareas.push(tarea);
+      return tarea;
+    }
+  }
   // 5 · quitar(id): la saca del array y la devuelve · Error («… no está …») si no la encuentra
   //     Pista: findIndex + splice
   // 6 · tiene(id): true / false. Pista: some
