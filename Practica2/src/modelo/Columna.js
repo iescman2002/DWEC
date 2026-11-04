@@ -70,15 +70,15 @@ export class Columna {
       // Casuisticas:
       // 1: Si las dos tareas tienen limite:
       if (a.limite !== null && b.limite !== null) {
-        return a.limite - b.limite; // Ordena normal.
+        return -1; // Ordena normal de menor a menor para ver cual es el que vence mas pronto (return a - b).
       }
-      // 2: Si la tarea a no tiene limite:
+      // 2: Si la tarea a no tiene limite, entonces la tarea b tendrá prioridad:
       else if (a.limite === null) {
-        return b.limite - a.limite; // Prioriza la tarea B
+        return 1; // Prioriza la tarea B (return b - a) 
       }
-      // 3: Si la tarea b no tiene limite:
+      // 3: Si la tarea b no tiene limite, entonces la tarea a tendrá prioridad:
       else if (b.limite === null) {
-        return a.limite - b.limite; // Prioriza la tarea A
+        return -1; // Prioriza la tarea A (return a - b)
       }
     });
     return ordenadasPorPeso;
