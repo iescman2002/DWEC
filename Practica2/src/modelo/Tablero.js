@@ -67,22 +67,38 @@ export class Tablero {
 
   // buscar(id): la tarea, esté en la columna que esté, o null
   buscar(id) {
-    tablero = new Tablero();
-    columnas = tablero.columnas;
+    columna = this.dondeEsta(id); // Obtengo la columna donde se encuentra la tarea
+    if (columna !== null) {
+      const tarea = columna.tareas.find(tarea => tarea.id === id); // Busco la tarea por el id
+        if (tarea) { // Si tarea no es null
+          return tarea; // Devuelvo la tarea
+        }
+      //Si no se ha encontrado la tarea, devuelvo null
+      return null;
+    }
+  }
+
+  // dondeEsta(id): la Columna donde está, o null
+  dondeEsta(id) {
+    columnas = this.#columnas;
     for (const columna of columnas) {
-      const tarea = columna.tareas.find(tarea => tarea.id === id);
-      if (tarea) { // Si tarea no es null
-        return tarea; // Devuelvo la tarea
+      const tarea = columna.tareas.find(tarea => tarea.id === id); // Busco la tarea por el id
+      if (tarea) { // Si tarea no es null (es decir que la ha encontrado)
+        return columna; // Devuelvo la columna
       }
     }
-    //Si no se ha encontrado la tarea, devuelvo null
-    return null;
+    return null; // Si no se ha encontrado la tarea devuelvo null
   }
-  // dondeEsta(id): la Columna donde está, o null
-
   // mover(id, destino): Error si no existe la tarea · Error si la columna destino está llena
   //   (¡comprueba ANTES de quitarla de su columna, o se perdería!) · la mueve y la devuelve
+  mover(id, destino) {
+    if (this.buscar(id) === null) {
+      throw new Error("Error: no existe la tarea.");
+    }
+    if (this.#columnas.get(destino) === sinhacer) {
 
+    }
+  }
   // completar(id): la mueve a «Hecho» y añade a «Por hacer» lo que devuelva tarea.alCompletar()
   //   ⚠️ Sin preguntar si es recurrente: eso es el polimorfismo
 
