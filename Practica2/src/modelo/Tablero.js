@@ -97,18 +97,7 @@ export class Tablero {
     const columnaDestino = this.#columnas.get(destino);
     const tarea = this.buscar(id);
     // 2. Hago las verificaciones antes de trabajar con las tablas
-    // 2.1 Verifico que exista la tarea:
-    if (tarea === null) { // Si no existe la tarea (la busco y es nula) tiro error
-      throw new MovimientoNoPermitidoError(`Error: no existe la tarea ${id}.`);
-    }
-    // 2.2 Verifico que la columna introducida exista:
-    if (columnaDestino === undefined) {
-      throw new MovimientoNoPermitidoError(`Error: La columna ${destino} no existe.`);
-    }
-    // 2.2 Verifico que la columna donde voy a mover la tarea no esté llena:
-    if (columnaDestino.llena) { // Si la columna de destino ya está llena tiro error
-      throw new ColumnaLlenaError("Error: La columna de destino está llena.");
-    }
+    this.#trasladar(id,destino);
     // 3. Quito la tarea de su origen
     columnaOrigen.quitar(id);
     // 4. Añado la tarea a la columna de destino
@@ -119,6 +108,8 @@ export class Tablero {
   // completar(id): la mueve a «Hecho» y añade a «Por hacer» lo que devuelva tarea.alCompletar()
   //   ⚠️ Sin preguntar si es recurrente: eso es el polimorfismo
   completar(id) {
+    // 0. Paso todas las verificaciones existentes desde mover:
+    this.#trasladar(id,"Hecho")
     // Obtengo la tarea
     const tarea = this.buscar(id);
     // Muevo la tarea a la columna "Hecho"
@@ -170,7 +161,40 @@ export class Tablero {
   //     MovimientoNoPermitidoError. Todo se comprueba ANTES de tocar nada.
   //   Pista: mover y completar hacen casi lo mismo. Un método privado #trasladar(id, destino)
   //   con las comprobaciones evita escribirlas dos veces.
+  #trasladar(id, destino) {
+    // Obtengo las columnas de origen y de destino de la tarea:
+    let columnaOrigen = null;
+    for (const columna of this.#columnas.values()) {
+      if (columna.tiene(id)) {
+        columnaOrigen = columna;
+        break;
+      }
+    }
+    const columnaDestino = this.#columnas.get(destino)
+    // 0. Compruebo que la tarea exista y que esté en una columna existente:
+    if (columnaOrigen !== null && columnaOrigen !== undefined) {
+      // 0.5 Compruebo que la columna de destino exista:
+      if (columnaDestino !== null && columnaDestino !== undefined) {
+        // 1. Compruebo que la tarea NO esté en la columna "Hecho" (si está en "Hecho" no podrá ni mover ni completarse):
+        // 1. Compruebo también que la columna donde está la tarea no sea la misma que columna del destino:
+        if ((columnaOrigen.nombre === "Hecho") || (columnaOrigen.nombre === destino)) {
+          throw new MovimientoNoPermitidoError(id, destino,destino);
+        }
+        // 2. Compruebo si voy a mover una tarea a una columna que ya está llena:
+        if (columnaDestino.llena) {
+          throw new ColumnaLlenaError(columnaDestino)
+        }
+        // 3. Compruebo que la tarea que voy a mover no esté en la columna "Hecho":
 
+        }
+        else {
+          throw new Error(`La columna de destino ${destino} no existe.`)
+        }
+    }
+    else {
+      throw new Error(`La tarea ${id} no existe.`)
+    }
+  }
   // ✍️ C4 (bloque C) ────────────────────────────────────────────────────────────
   // toJSON(): { version, limiteEnCurso, columnas: { "Por hacer": [datos…], … } }
   //   JSON.stringify(tablero) lo llama solo. Sin él sale "{}": los # no se ven. Usa aDatos.
