@@ -133,7 +133,28 @@ export class Tablero {
   }
   // resumen(hoy = new Date()): { porHacer, enCurso, hecho, vencidas }
   //   vencidas = las que estaVencida(hoy) y NO están en «Hecho»
-
+  resumen(hoy = new Date()) {
+    // Inicializo el resumen con los datos de las columnas en 0:
+    const resumen = {
+      "elCurso": 0,
+      "hecho": 0,
+      "porHacer": 0,
+      "vencidas": 0
+    };
+    // Recorro todas las columnas del tablero
+    for (const columna of this.#columnas.values()) {
+    // Recorro las tareas de cada columna para ver cual está vencida y cual no
+      for (const tarea of columna.tareas) {
+        // Si la tarea está vencida:
+        if (tarea.estaVencida(hoy)) {
+          resumen["vencidas"]++; // Incremento 1 a las tareas vencidas
+        }
+      }
+      // Asigno la longitud de las tareas que hay en la columna a cada columna del resumen.
+      resumen[columna.nombre] = columna.tareas.length;
+    }
+    return resumen;
+  }
   // ✍️ A5 · Reglas (vuelves a mover y completar) ─────────────────────────────────
   //   - Columna llena → ColumnaLlenaError (en vez de un Error cualquiera)
   //   - Sacar una tarea de «Hecho», o «moverla» a la columna en la que ya está →
