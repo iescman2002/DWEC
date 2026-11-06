@@ -136,7 +136,7 @@ export class Tablero {
   resumen(hoy = new Date()) {
     // Inicializo el resumen con los datos de las columnas en 0:
     const resumen = {
-      "elCurso": 0,
+      "enCurso": 0,
       "hecho": 0,
       "porHacer": 0,
       "vencidas": 0
@@ -145,13 +145,22 @@ export class Tablero {
     for (const columna of this.#columnas.values()) {
     // Recorro las tareas de cada columna para ver cual está vencida y cual no
       for (const tarea of columna.tareas) {
-        // Si la tarea está vencida:
-        if (tarea.estaVencida(hoy)) {
+        // Si la tarea está vencida y no está en la columna Hecho:
+        if (tarea.estaVencida(hoy) && columna.nombre !== "Hecho") {
           resumen["vencidas"]++; // Incremento 1 a las tareas vencidas
         }
       }
       // Asigno la longitud de las tareas que hay en la columna a cada columna del resumen.
-      resumen[columna.nombre] = columna.tareas.length;
+      // Lo hago con mil ifs para pasar los tests correctamente
+      if (columna.nombre === "Por hacer") {
+        resumen["porHacer"] = columna.tareas.length;
+      }
+      else if (columna.nombre === "En curso") {
+        resumen["enCurso"] = columna.tareas.length;
+      }
+      else if (columna.nombre === "Hecho") {
+        resumen["hecho"] = columna.tareas.length;
+      }
     }
     return resumen;
   }
