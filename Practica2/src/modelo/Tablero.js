@@ -99,15 +99,15 @@ export class Tablero {
     // 2. Hago las verificaciones antes de trabajar con las tablas
     // 2.1 Verifico que exista la tarea:
     if (tarea === null) { // Si no existe la tarea (la busco y es nula) tiro error
-      throw new Error(`Error: no existe la tarea ${id}.`);
+      throw new MovimientoNoPermitidoError(`Error: no existe la tarea ${id}.`);
     }
     // 2.2 Verifico que la columna introducida exista:
     if (columnaDestino === undefined) {
-      throw new Error(`Error: La columna ${destino} no existe.`);
+      throw new MovimientoNoPermitidoError(`Error: La columna ${destino} no existe.`);
     }
     // 2.2 Verifico que la columna donde voy a mover la tarea no esté llena:
     if (columnaDestino.llena) { // Si la columna de destino ya está llena tiro error
-      throw new Error("Error: La columna de destino está llena.");
+      throw new ColumnaLlenaError("Error: La columna de destino está llena.");
     }
     // 3. Quito la tarea de su origen
     columnaOrigen.quitar(id);
