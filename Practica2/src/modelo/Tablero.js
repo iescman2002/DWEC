@@ -67,20 +67,20 @@ export class Tablero {
 
   // buscar(id): la tarea, esté en la columna que esté, o null
   buscar(id) {
-    columna = this.dondeEsta(id); // Obtengo la columna donde se encuentra la tarea
+    const columna = this.dondeEsta(id); // Obtengo la columna donde se encuentra la tarea
     if (columna !== null) {
       const tarea = columna.tareas.find(tarea => tarea.id === id); // Busco la tarea por el id
         if (tarea) { // Si tarea no es null
           return tarea; // Devuelvo la tarea
         }
       //Si no se ha encontrado la tarea, devuelvo null
-      return null;
     }
+    return null;
   }
 
   // dondeEsta(id): la Columna donde está, o null
   dondeEsta(id) {
-    columnas = this.#columnas;
+    const columnas = this.#columnas.values();
     for (const columna of columnas) {
       const tarea = columna.tareas.find(tarea => tarea.id === id); // Busco la tarea por el id
       if (tarea) { // Si tarea no es null (es decir que la ha encontrado)
@@ -92,12 +92,29 @@ export class Tablero {
   // mover(id, destino): Error si no existe la tarea · Error si la columna destino está llena
   //   (¡comprueba ANTES de quitarla de su columna, o se perdería!) · la mueve y la devuelve
   mover(id, destino) {
-    if (this.buscar(id) === null) {
-      throw new Error("Error: no existe la tarea.");
+    // 1. Guardo variables de las columnas en las que voy a trabajar
+    const columnaOrigen = this.dondeEsta(id);
+    const columnaDestino = this.#columnas.get(destino);
+    const tarea = this.buscar(id);
+    // 2. Hago las verificaciones antes de trabajar con las tablas
+    // 2.1 Verifico que exista la tarea:
+    if (tarea === null) { // Si no existe la tarea (la busco y es nula) tiro error
+      throw new Error(`Error: no existe la tarea ${id}.`);
     }
-    if (this.#columnas.get(destino) === sinhacer) {
-
+    // 2.2 Verifico que la columna introducida exista:
+    if (columnaDestino === undefined) {
+      throw new Error(`Error: La columna ${destino} no existe.`);
     }
+    // 2.2 Verifico que la columna donde voy a mover la tarea no esté llena:
+    if (columnaDestino.llena) { // Si la columna de destino ya está llena tiro error
+      throw new Error("Error: La columna de destino está llena.");
+    }
+    // 3. Quito la tarea de su origen
+    columnaOrigen.quitar(id);
+    // 4. Añado la tarea a la columna de destino
+    columnaDestino.añadir(tarea);
+    // 5. Devuelvo la tarea añadida
+    return tarea
   }
   // completar(id): la mueve a «Hecho» y añade a «Por hacer» lo que devuelva tarea.alCompletar()
   //   ⚠️ Sin preguntar si es recurrente: eso es el polimorfismo
