@@ -26,5 +26,20 @@ export function crearTarjeta(tarea, hoy = new Date()) {
 //   - Pintar dos veces NO puede duplicar: primero vacía. Pista: contenedor.replaceChildren(...)
 //   - Sin tareas: deja SOLO un <p class="vacia">Sin tareas</p>
 export function pintarLista(contenedor, tareas, hoy = new Date()) {
-  throw new Error("Sin hacer");
+  // Vacio el contenedor
+  contenedor.replaceChildren();
+  // Si las tareas estan vacias:
+  if (tareas.length === 0) {
+    const etiqueta = document.createElement("p"); // Creo el elemento <p>
+    etiqueta.className = "vacia" // Le asigno la clase vacia
+    etiqueta.textContent = "Sin tareas"; // Le meto el texto "Sin tareas"
+    contenedor.append(etiqueta); // Lo añado al contenedor .lista
+  }
+  // Si hay tareas (no están vacías):
+  else {
+    for (const tarea of tareas) {
+      const tarjeta = crearTarjeta(tarea, hoy);
+      contenedor.append(tarjeta);
+    }
+  }
 }
