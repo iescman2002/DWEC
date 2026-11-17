@@ -24,5 +24,14 @@ export function leerFormulario(form) {
 //   - Si no lo tiene: <p> vacío y SIN aria-invalid (removeAttribute)
 //   Pista: p.dataset.errorDe es el nombre del campo (data-error-de → dataset.errorDe)
 export function mostrarErrores(form, errores) {
-  throw new Error("Sin hacer");
+  // Guardo todos los campos de errores de <p data-error-de="campo">
+  const camposErrores = document.querySelectorAll(`[data-error-de-="${errores.campo}"]`);
+  // Recorro los data-error-de
+  for (const campo of camposErrores) {
+    const p = campo.querySelector("p");
+    p.dataset.errorDe(errores.campo)
+    if (campo.error !== null) {
+      const control = form.elements[campo]
+    }
+  }
 }
