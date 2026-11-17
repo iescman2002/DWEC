@@ -25,13 +25,21 @@ export function leerFormulario(form) {
 //   Pista: p.dataset.errorDe es el nombre del campo (data-error-de → dataset.errorDe)
 export function mostrarErrores(form, errores) {
   // Guardo todos los campos de errores de <p data-error-de="campo">
-  const camposErrores = document.querySelectorAll(`[data-error-de-="${errores.campo}"]`);
-  // Recorro los data-error-de
-  for (const campo of camposErrores) {
-    const p = campo.querySelector("p");
-    p.dataset.errorDe(errores.campo)
-    if (campo.error !== null) {
-      const control = form.elements[campo]
+  const camposErrores = form.querySelectorAll("p[data-error-de]"); // Busca todos los p con la clase data-error-de
+  // Recorro cada <p> de los errores
+  for (const p of camposErrores) {
+    // Guardamos el nombre del campo y el control del formulario
+    const campo = p.dataset.errorDe; // Con dataset buscamos los atributos que empiezan por data -> data-error-de -> dataset.errorDe
+    const control = form.elements[campo]; // Guardamos el elemento del formulario que coincida con el campo -> campo = limite -> control = date (el input donde se encuentra el campo)
+    // Si existe un error con el campo
+    if (errores[campo]) {
+      p.textContent = errores[campo]; // EL texto del p será el el error del campo
+      control.setAttribute("aria-invalid","true"); // Pongo el atributo aria-invalid como true
+    }
+    // Si no hay error en el campo:
+    else {
+      p. textContent = ""; // El p vacio
+      control.removeAttribute("aria-invalid"); // Y elimino el atributo aria-invalid
     }
   }
 }
