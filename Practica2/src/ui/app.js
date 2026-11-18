@@ -107,10 +107,11 @@ export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } =
   function cambiar(accion) {
     switch (accion) {
       case "empezar": // Si la accion es empezar:
-        accion = "por hacer";
+        accion.setAttribute("data-accion","por hacer");
+        break;
       case "por hacer": // Si la accion es por hacer:
-        accion = "completar"  
-      break;
+        accion.setAttribute("data-accion",["volver", "completar"]);
+        break;
       case "completar": // Si la accion es completar:  
         break;
     }
@@ -118,10 +119,10 @@ export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } =
   const botones = columnas.querySelectorAll("[data-accion]"); // Obtengo los botones que tengan data-accion de cada tarjeta de las columnas 
   
   // Obtengo de cada boton la accion que hace cada boton
-  for (const boton of botones) {
-    const accionBoton = boton.getAttribute("data-accion");
-    delegar(columnas,"click","button", cambiar(accionBoton)); // Creo el EventListener para cada boton que reciba el click al clickear #columnas (click es el tipo)
-  }
+    delegar(columnas,"click","#columnas", (boton, evento) => { // Delegar recibe el click al clickear en #columnas
+      const accionBoton = evento.target.closest("data-accion"); // Guardo el boton como el primer elemento mas cercano con data-accion
+      cambiar(accionBoton);
+    }); // Creo el EventListener para cada boton que reciba el click al clickear #columnas (click es el tipo)
 
   // ✍️ B6 · submit de `form`: preventDefault, leerFormulario, validar y mostrarErrores. Si hay errores,
   //   no se crea nada. Si no, tablero.crearTarea(datos) (como un cambio más) y form.reset().
