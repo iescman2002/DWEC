@@ -32,7 +32,7 @@ export function validar(datos) {
 export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } = {}) {
   const form = raiz.querySelector("#form-alta");
   const aviso = raiz.querySelector("#aviso");
-  const columnas = raiz.querySelector("#columnas");
+  const columnas = raiz.querySelector("#columnas"); // Guarda el section donde se encuentran los divs de columna
   const resumen = raiz.querySelector("#resumen");
 
   // ✍️ B4 · pintar(): deja la página igual que el modelo cada vez que se llama, y NO pone listeners
@@ -43,7 +43,35 @@ export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } =
   //   - [data-dato="vencidas"]: las vencidas de tablero.resumen(ahora)
   //   La fecha de hoy: const ahora = hoy ?? new Date();  (los tests pasan una fija)
   function pintar() {
-    throw new Error("Sin hacer");
+    const ahora = hoy ?? new Date(); // Crear la fecha con la que voy a pintar
+    const divsColumnas = columnas.querySelectorAll("[data-columna]"); // Guardo como lista los divs del section id Columna para poder trabajar con ellos
+    
+    for (const divColumna of divsColumnas) { // Recorro los divs de cada columna
+      const columna = tablero.columna(divColumna.dataset.columna); // Accedo al objeto columna usando la funcion columna del tablero pasandole el valor del div de columna
+
+      const tareasOrdenadas = columna.ordenadas(); // Ordeno cada columna por tareas y lo guardo en una variable
+      const lista = divColumna.querySelector(".lista"); // Busco en el div de la columna la .lista que voy a pintar
+      pintarLista(lista, tareasOrdenadas, ahora); // Pinto cada tarea de la lista sobre la columna que estamos trabajando y creo las tarjetas dentro de pintarLista
+       
+      // Miro en las acciones la clave que sea igual que columna.nombre y guardo su = [texto, data-accion]
+      const accionColumna = ACCIONES[columna.nombre]; // Ej: Si columna -> columna.nombre = "Por hacer" Entonces accionColumna = ["Empezar →", "empezar"]
+      // Si la columna tiene acciones (es decir, que no es la columna Hecho que no tiene botones)
+      if (accionColumna.length !== 0) {
+
+        // Recorro las tarjetas de la lista sobre la que estamos trabajando para implementar los botones de cada tarea:
+        const tarjetas = lista.querySelectorAll(".tarjeta");
+        for (const tarjeta of tarjetas) {
+          const textoBoton = accionColumna[0];
+          const accion = accionColumna[1];
+          const boton = document.createElement("button"); // Creo el boton en el documento
+          boton.textContent = textoBoton;
+          boton.setAttribute("type","button");
+          boton.setAttribute("data-accion",accion);
+          tarjeta.append(boton); // Añado el boton a todos los .tarjeta
+        }
+      }
+    }
+    // FALTA POR IMPLEMENTAR: .contador de cada columna | data-dato="progreso" | data-dato="vencidas"
   }
 
   // 👀 Resuelto: avisar("texto") enseña el aviso; avisar("") lo esconde
