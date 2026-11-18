@@ -48,18 +48,23 @@ export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } =
     
     for (const divColumna of divsColumnas) { // Recorro los divs de cada columna
       const columna = tablero.columna(divColumna.dataset.columna); // Accedo al objeto columna usando la funcion columna del tablero pasandole el valor del div de columna
+      const listaColumna = divColumna.querySelector(".lista"); // Busco en el div de la columna el elemento .lista que voy a pintar
+      
+      const contadorColumna = divColumna.querySelector(".contador"); // Obtengo el elemento .contador del div Columna 
+      // Elemento que muestra las tareas de la columna (si limiteWip existe las muestra en formato "numTareas / limiteWip")
+      const numTareasColumna = columna.limiteWip === null ? `(${columna.tareas.length})` : `(${columna.tareas.length}/${columna.limiteWip})`;
+      // Añado al .contador de cada columna el texto: numTareasColumna
+      contadorColumna.textContent = numTareasColumna;
 
       const tareasOrdenadas = columna.ordenadas(); // Ordeno cada columna por tareas y lo guardo en una variable
-      const lista = divColumna.querySelector(".lista"); // Busco en el div de la columna la .lista que voy a pintar
-      pintarLista(lista, tareasOrdenadas, ahora); // Pinto cada tarea de la lista sobre la columna que estamos trabajando y creo las tarjetas dentro de pintarLista
+      pintarLista(listaColumna, tareasOrdenadas, ahora); // Pinto cada tarea de la lista sobre la columna que estamos trabajando y creo las tarjetas dentro de pintarLista
        
       // Miro en las acciones la clave que sea igual que columna.nombre y guardo su = [texto, data-accion]
       const accionColumna = ACCIONES[columna.nombre]; // Ej: Si columna -> columna.nombre = "Por hacer" Entonces accionColumna = ["Empezar →", "empezar"]
       // Si la columna tiene acciones (es decir, que no es la columna Hecho que no tiene botones)
       if (accionColumna.length !== 0) {
-
         // Recorro las tarjetas de la lista sobre la que estamos trabajando para implementar los botones de cada tarea:
-        const tarjetas = lista.querySelectorAll(".tarjeta");
+        const tarjetas = listaColumna.querySelectorAll(".tarjeta");
         for (const tarjeta of tarjetas) {
           const textoBoton = accionColumna[0];
           const accion = accionColumna[1];
@@ -71,7 +76,7 @@ export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } =
         }
       }
     }
-    // FALTA POR IMPLEMENTAR: .contador de cada columna | data-dato="progreso" | data-dato="vencidas"
+    // FALTA POR IMPLEMENTAR: data-dato="progreso" | data-dato="vencidas"
   }
 
   // 👀 Resuelto: avisar("texto") enseña el aviso; avisar("") lo esconde
