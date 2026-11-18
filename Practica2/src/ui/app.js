@@ -102,6 +102,26 @@ export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } =
   //   Si el tablero lanza un ErrorTablero → avisar(error.message) y no se repinta.
   //   Cualquier otro error → se relanza (es un fallo del programa).
   //   Pista: una función cambiar(accion) con el try/catch te sirve también para el B6.
+  
+  // Creo la función que le pasaré a delegar, que recibirá la acción del boton (Ej accion: boton = )
+  function cambiar(accion) {
+    switch (accion) {
+      case "empezar": // Si la accion es empezar:
+        accion = "por hacer";
+      case "por hacer": // Si la accion es por hacer:
+        accion = "completar"  
+      break;
+      case "completar": // Si la accion es completar:  
+        break;
+    }
+  }
+  const botones = columnas.querySelectorAll("[data-accion]"); // Obtengo los botones que tengan data-accion de cada tarjeta de las columnas 
+  
+  // Obtengo de cada boton la accion que hace cada boton
+  for (const boton of botones) {
+    const accionBoton = boton.getAttribute("data-accion");
+    delegar(columnas,"click","button", cambiar(accionBoton)); // Creo el EventListener para cada boton que reciba el click al clickear #columnas (click es el tipo)
+  }
 
   // ✍️ B6 · submit de `form`: preventDefault, leerFormulario, validar y mostrarErrores. Si hay errores,
   //   no se crea nada. Si no, tablero.crearTarea(datos) (como un cambio más) y form.reset().
