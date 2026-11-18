@@ -77,8 +77,8 @@ export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } =
       }
     }
     // Obtener elementos (los strong) de data-dato="progreso" | data-dato="vencidas"
-    const elementoDatoProgreso = raiz.querySelector("[data-dato=progreso]");
-    const elementoDatoVencidas = raiz.querySelector("[data-dato=vencidas]");
+    const elementoDatoProgreso = resumen.querySelector("[data-dato=progreso]");
+    const elementoDatoVencidas = resumen.querySelector("[data-dato=vencidas]");
 
     // Obtenemos el resumen del tablero para obtener sus datos
     const resumenTablero = tablero.resumen(ahora);
