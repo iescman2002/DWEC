@@ -67,7 +67,7 @@ export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } =
         const tarjetas = listaColumna.querySelectorAll(".tarjeta");
         for (const tarjeta of tarjetas) {
           const textoBoton = accionColumna[0][0];
-          const accion = accionColumna[1];
+          const accion = accionColumna[0][1];
           const boton = document.createElement("button"); // Creo el boton en el documento
           boton.textContent = textoBoton;
           boton.setAttribute("type","button");
