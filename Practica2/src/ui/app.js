@@ -76,7 +76,18 @@ export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } =
         }
       }
     }
-    // FALTA POR IMPLEMENTAR: data-dato="progreso" | data-dato="vencidas"
+    // Obtener elementos (los strong) de data-dato="progreso" | data-dato="vencidas"
+    const elementoDatoProgreso = raiz.querySelector("[data-dato=progreso]");
+    const elementoDatoVencidas = raiz.querySelector("[data-dato=vencidas]");
+
+    // Obtenemos el resumen del tablero para obtener sus datos
+    const resumenTablero = tablero.resumen(ahora);
+    const numTareasVencidas = resumenTablero["vencidas"]; // Obtengo el numero de tareas vencidas
+    const progresoTotal = resumenTablero["enCurso"] + resumenTablero["porHacer"] + resumenTablero["hecho"]; // El 100% del progreso (la suma de todas las tareas menos las vencidas)
+    const progresoActual = resumenTablero["hecho"] / (progresoTotal*100); // El % de tareas hechas en relacion con el progreso total (equivalente al 100%)
+    
+    elementoDatoProgreso.textContent = `${progresoActual} %`;
+    elementoDatoVencidas.textContent = numTareasVencidas;
   }
 
   // 👀 Resuelto: avisar("texto") enseña el aviso; avisar("") lo esconde
