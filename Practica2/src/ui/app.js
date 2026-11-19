@@ -104,24 +104,33 @@ export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } =
   //   Pista: una función cambiar(accion) con el try/catch te sirve también para el B6.
   
   // Creo la función que le pasaré a delegar, que recibirá la acción del boton (Ej accion: boton = )
-  function cambiar(accion) {
-    switch (accion) {
+  function cambiar(accion) { // ACCION VA A SER UNA TARJETA, ASI PODRÉ ACCEDER A LA TAREA PARA EL ID DE MOVER Y AL BOTON PARA CAMBIAR SU ATRIBUTO
+    const boton = accion.querySelector("[data-accion]"); // Obtengo el boton de dentro de la tarjeta
+    const eleccion = boton.dataset.accion;
+    switch (eleccion) {
       case "empezar": // Si la accion es empezar:
-        accion.setAttribute("data-accion","por hacer");
+        tablero.mover(0,"En curso") // muevo la tarea a en curso
+        eleccion.setAttribute("data-accion","por hacer");
         break;
-      case "por hacer": // Si la accion es por hacer:
-        accion.setAttribute("data-accion",["volver", "completar"]);
+      case "volver": // Si la accion es volver:
+        tablero.mover(1,"Hecho");
+        eleccion.setAttribute("data-accion","empezar");
         break;
-      case "completar": // Si la accion es completar:  
+      case "completar":
+        tablero.completar(accion.);
+        eleccion.setAttribute("empezar");
+        break;
+      case "completar": // Si la accion es completar:
         break;
     }
   }
-  const botones = columnas.querySelectorAll("[data-accion]"); // Obtengo los botones que tengan data-accion de cada tarjeta de las columnas 
   
   // Obtengo de cada boton la accion que hace cada boton
-    delegar(columnas,"click","#columnas", (boton, evento) => { // Delegar recibe el click al clickear en #columnas
-      const accionBoton = evento.target.closest("data-accion"); // Guardo el boton como el primer elemento mas cercano con data-accion
-      cambiar(accionBoton);
+    delegar(columnas,"click","button[data-accion]", (boton) => { // Delegar recibe el click al clickear en el boton (delegar recibe el boton cuando hago click, el boton hace de evento)
+      // MANEJADOR SE TRABAJA DENTRO DEL BOTON
+      const tarjeta = boton.target.closest("tarjeta"); // Obtengo la tarjeta donde la que se realiza el trigger
+      
+      cambiar(tarjeta); // Se la paso a la función cambiar
     }); // Creo el EventListener para cada boton que reciba el click al clickear #columnas (click es el tipo)
 
   // ✍️ B6 · submit de `form`: preventDefault, leerFormulario, validar y mostrarErrores. Si hay errores,
