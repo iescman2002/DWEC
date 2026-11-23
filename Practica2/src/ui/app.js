@@ -66,13 +66,16 @@ export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } =
         // Recorro las tarjetas de la lista sobre la que estamos trabajando para implementar los botones de cada tarea:
         const tarjetas = listaColumna.querySelectorAll(".tarjeta");
         for (const tarjeta of tarjetas) {
-          const textoBoton = accionColumna[0][0];
-          const accion = accionColumna[0][1];
-          const boton = document.createElement("button"); // Creo el boton en el documento
-          boton.textContent = textoBoton;
-          boton.setAttribute("type","button");
-          boton.setAttribute("data-accion",accion);
-          tarjeta.append(boton); // Añado el boton a todos los .tarjeta
+          // Como una tarjeta puede tener varias acciones (ej: tarjeta "En curso" -> Acciones: [volver, completar])
+          for (const accionTarjeta of accionColumna) { // Recorro las acciones de la tarjeta se pinten todos los botones
+            const textoBoton = accionTarjeta[0]; // El texto que tendrá el botón. Ej: tarjeta "Por hacer" -> "Empezar →"
+            const accion = accionTarjeta[1]; // La acción que tendrá el botón.
+            const boton = document.createElement("button"); // Creo el boton
+            boton.textContent = textoBoton;
+            boton.setAttribute("type","button");
+            boton.setAttribute("data-accion", accion);
+            tarjeta.append(boton); // Añado el boton a la .tarjeta de la columna
+          }
         }
       }
     }
@@ -84,8 +87,10 @@ export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } =
     const resumenTablero = tablero.resumen(ahora);
     const numTareasVencidas = resumenTablero["vencidas"]; // Obtengo el numero de tareas vencidas
     const progresoTotal = resumenTablero["enCurso"] + resumenTablero["porHacer"] + resumenTablero["hecho"]; // El 100% del progreso (la suma de todas las tareas menos las vencidas)
-    const progresoActual = resumenTablero["hecho"] / (progresoTotal*100); // El % de tareas hechas en relacion con el progreso total (equivalente al 100%)
-    
+    let progresoActual = 0; // Por defecto el progresoActual vale 0
+    if (progresoTotal !== 0) { // Si hay alguna tarea calculo su %, si no hay ninguna tarea progresoActual será siempre 0
+      progresoActual = Math.round((resumenTablero["hecho"]*100) / progresoTotal); // El % de tareas hechas en relacion con el progreso total (equivalente al 100%)
+    }
     elementoDatoProgreso.textContent = `${progresoActual} %`;
     elementoDatoVencidas.textContent = numTareasVencidas;
   }
@@ -103,40 +108,53 @@ export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } =
   //   Cualquier otro error → se relanza (es un fallo del programa).
   //   Pista: una función cambiar(accion) con el try/catch te sirve también para el B6.
   
-  // Creo la función que le pasaré a delegar, que recibirá la acción del boton (Ej accion: boton = )
-  function cambiar(accion) { // ACCION VA A SER UNA TARJETA, ASI PODRÉ ACCEDER A LA TAREA PARA EL ID DE MOVER Y AL BOTON PARA CAMBIAR SU ATRIBUTO
-    const boton = accion.querySelector("[data-accion]"); // Obtengo el boton de dentro de la tarjeta
-    const eleccion = boton.dataset.accion;
-    switch (eleccion) {
-      case "empezar": // Si la accion es empezar:
-        tablero.mover(0,"En curso") // muevo la tarea a en curso
-        eleccion.setAttribute("data-accion","por hacer");
-        break;
-      case "volver": // Si la accion es volver:
-        tablero.mover(1,"Hecho");
-        eleccion.setAttribute("data-accion","empezar");
-        break;
-      case "completar":
-        tablero.completar(accion.);
-        eleccion.setAttribute("empezar");
-        break;
-      case "completar": // Si la accion es completar:
-        break;
+  // Creo la función que le pasaré al evento delegar, que recibirá la acción del boton (Ej accion: boton)
+  function cambiar(accion) { // Acción trabaja como el botón, que es lo que hace de evento y con lo que podremos acceder a todos los datos necesarios
+    const tarjeta = accion.closest(".tarjeta"); // La tarjeta donde se encuentra el boton en el que estamos trabajando
+    const eleccion = accion.dataset.accion; // La accion que tiene el boton
+    const idTarea = Number(tarjeta.dataset.id); // El id de la tarea sobre la que estamos trabajando
+    try {
+      switch (eleccion) { // Contemplamos las 3 únicas posibles opciones:
+        case "empezar": // Si la accion es empezar:
+          tablero.mover(idTarea,"En curso") // muevo la tarea (no modifico los atributos data-accion porque las tarjetas se vuelven a construir de 0 al llamar a pintar)
+          //boton.setAttribute("data-accion","por hacer");
+          break;
+        case "volver": // Si la accion es volver:
+          tablero.mover(idTarea,"Por hacer");
+          //boton.setAttribute("data-accion","empezar");
+          break;
+        case "completar": // Si la accion es completar:
+          tablero.completar(idTarea);
+          //boton.setAttribute("empezar");
+          break;
+      }
+      // Se ejecuta cada vez que el cambio sale bien:
+      avisar(""); // Elimino todos los mensajes de errores
+      pintar(); // Pinta el tablero con los nuevos botones actualizados
+      alCambiar(tablero);
+    }
+    catch (error) { // Si la opcion (eleccion) del boton no es ninguna de las anteriores, tiramos error
+      if (error instanceof ErrorTablero) {
+        avisar(error.message);
+      }
+      else {
+        throw error; // Se relanza el error del catch
+      }
     }
   }
   
-  // Obtengo de cada boton la accion que hace cada boton
-    delegar(columnas,"click","button[data-accion]", (boton) => { // Delegar recibe el click al clickear en el boton (delegar recibe el boton cuando hago click, el boton hace de evento)
-      // MANEJADOR SE TRABAJA DENTRO DEL BOTON
-      const tarjeta = boton.target.closest("tarjeta"); // Obtengo la tarjeta donde la que se realiza el trigger
-      
-      cambiar(tarjeta); // Se la paso a la función cambiar
-    }); // Creo el EventListener para cada boton que reciba el click al clickear #columnas (click es el tipo)
+  // Abro y cierro el listener en cada boton que toco
+  delegar(columnas,"click","button[data-accion]", (boton) => { // Delegar recibe el click al clickear en el boton (delegar recibe el boton cuando hago click, el boton hace de evento)
+    // Dentro de la funcion que ejecuto al delegar, le paso el boton y no la tarjeta porque una tarjeta puede contener varios botones y solo queremos trabajar con el que hemos pulsado
+    cambiar(boton); // Le paso el boton
+  }); // Creo el EventListener para cada boton que reciba el click al clickear el boton de #columnas (click es el tipo)
+  
+  avisar(""); // Limpia los mensajes de errores
+  pintar(); // Hace un pintado inicial de los datos
 
   // ✍️ B6 · submit de `form`: preventDefault, leerFormulario, validar y mostrarErrores. Si hay errores,
   //   no se crea nada. Si no, tablero.crearTarea(datos) (como un cambio más) y form.reset().
 
-  pintar();
   return { pintar };
 }
 
