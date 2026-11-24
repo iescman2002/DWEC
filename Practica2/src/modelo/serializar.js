@@ -27,5 +27,12 @@ export function aDatos(tarea) {
 // ✍️ C1 · desdeDatos(datos) → lo contrario de aDatos: TareaRecurrente si trae cadaDias, Tarea si no
 //   (cada campo a su sitio en el constructor, también el id)
 export function desdeDatos(datos) {
-  throw new Error("Sin hacer");
+  let tarea;
+  if (datos.cadaDias == null) { // Con == compara si es undefined tambien, si no existe cadaDias creo tarea normal
+    tarea = new Tarea(datos.titulo, datos.prioridad, datos.limite);
+  }
+  else { // Si cadaDias existe po entonces creo TareaRecurrente
+    tarea = new TareaRecurrente(datos.titulo, datos.prioridad, datos.limite, datos.cadaDias);
+  }
+  return tarea;
 }
