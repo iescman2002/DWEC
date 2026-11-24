@@ -70,7 +70,7 @@ export class Columna {
       // Casuisticas:
       // 1: Si las dos tareas tienen limite:
       if (a.limite !== null && b.limite !== null) {
-        return -1; // Ordena normal de menor a menor para ver cual es el que vence mas pronto (return a - b).
+        return a.limite - b.limite; // Ordena normal de menor a menor para ver cual es el que vence mas pronto (return a - b).
       }
       // 2: Si la tarea a no tiene limite, entonces la tarea b tendrá prioridad:
       else if (a.limite === null) {

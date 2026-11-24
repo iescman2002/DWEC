@@ -124,26 +124,45 @@ export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } =
   //   Cualquier otro error → se relanza (es un fallo del programa).
   //   Pista: una función cambiar(accion) con el try/catch te sirve también para el B6.
   
-  // Creo la función que le pasaré al evento delegar, que recibirá la acción del boton (Ej accion: boton)
-  function cambiar(accion) { // Acción trabaja como el botón, que es lo que hace de evento y con lo que podremos acceder a todos los datos necesarios
-    const tarjeta = accion.closest(".tarjeta"); // La tarjeta donde se encuentra el boton en el que estamos trabajando
-    const eleccion = accion.dataset.accion; // La accion que tiene el boton
-    const idTarea = Number(tarjeta.dataset.id); // El id de la tarea sobre la que estamos trabajando
+  // Creo la función que le pasaré al evento delegar, que recibirá la acción del boton (Ej accion: boton / submit)
+  function cambiar(accion) {
+     // Acción trabaja como el botón o como el submit, que es lo que hace de evento y con lo que podremos acceder a todos los datos necesarios
+
     try {
-      switch (eleccion) { // Contemplamos las 3 únicas posibles opciones:
-        case "empezar": // Si la accion es empezar:
-          tablero.mover(idTarea,"En curso") // muevo la tarea (no modifico los atributos data-accion porque las tarjetas se vuelven a construir de 0 al llamar a pintar)
-          //boton.setAttribute("data-accion","por hacer");
-          break;
-        case "volver": // Si la accion es volver:
-          tablero.mover(idTarea,"Por hacer");
-          //boton.setAttribute("data-accion","empezar");
-          break;
-        case "completar": // Si la accion es completar:
-          tablero.completar(idTarea);
-          //boton.setAttribute("empezar");
-          break;
+      // Si la accion es submit (Si lo llamamos desde el listener de form)
+      if (accion === "submit") {
+      const datosFormulario = leerFormulario(form); // Guardo los datos del formulario al leer el formulario
+      const errores = validar(datosFormulario); // Obtengo los errores del formulario validando los datos
+    
+      mostrarErrores(form, errores); // Si hay errores los muestro y no hago nada más
+      if (Object.keys(errores).length === 0) { // Cuando hayan errores (Object.keys guarda los atributos de errores en un array)
+        const tarea = tablero.crearTarea((datosFormulario)); // Creo la tarea en el tablero con los datos del formulario
+        tablero.columna("Por hacer").añadir(tarea)// Y lo añado a la columna Por Hacer
+        form.reset(); // Reseteo el form al terminarlo
       }
+    }
+      // Si la accion no es submit, será un boton (se ha llamado a cambiar desde delegar)
+      else {
+        const tarjeta = accion.closest(".tarjeta"); // La tarjeta donde se encuentra el boton en el que estamos trabajando
+        const eleccion = accion.dataset.accion; // La accion que tiene el boton
+        const idTarea = Number(tarjeta.dataset.id); // El id de la tarea sobre la que estamos trabajando
+        
+        switch (eleccion) { // Contemplamos las 3 únicas posibles opciones:
+          case "empezar": // Si la accion es empezar:
+            tablero.mover(idTarea,"En curso") // muevo la tarea (no modifico los atributos data-accion porque las tarjetas se vuelven a construir de 0 al llamar a pintar)
+            //boton.setAttribute("data-accion","por hacer");
+            break;
+          case "volver": // Si la accion es volver:
+            tablero.mover(idTarea,"Por hacer");
+            //boton.setAttribute("data-accion","empezar");
+            break;
+          case "completar": // Si la accion es completar:
+            tablero.completar(idTarea);
+            //boton.setAttribute("empezar");
+            break;
+        }
+      }
+
       // Se ejecuta cada vez que el cambio sale bien:
       avisar(""); // Elimino todos los mensajes de errores
       pintar(); // Pinta el tablero con los nuevos botones actualizados
@@ -172,15 +191,7 @@ export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } =
   //   no se crea nada. Si no, tablero.crearTarea(datos) (como un cambio más) y form.reset().
   form.addEventListener("submit", (evento) => {// Añado un eventListener sobre el formulario al hacer submit
     evento.preventDefault(); // Para no recargar la página al enviar el formulario
-    const datosFormulario = leerFormulario(form); // Guardo los datos del formulario al leer el formulario
-    const errores = validar(datosFormulario); // Obtengo los errores del formulario validando los datos
-    
-    mostrarErrores(form, errores); // Si hay errores los muestro y no hago nada más
-    if (Object.keys(errores).length === 0) { // Cuando hayan errores (Object.keys guarda los atributos de errores en un array)
-      const tarea = tablero.crearTarea((datosFormulario)); // Creo la tarea en el tablero con los datos del formulario
-      tablero.columna("Por hacer").añadir(tarea)// Y lo añado a la columna Por Hacer
-      form.reset(); // Reseteo el form al terminarlo
-    }
+    cambiar("submit");
   }
 )
   return { pintar };
