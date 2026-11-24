@@ -170,7 +170,18 @@ export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } =
 
   // ✍️ B6 · submit de `form`: preventDefault, leerFormulario, validar y mostrarErrores. Si hay errores,
   //   no se crea nada. Si no, tablero.crearTarea(datos) (como un cambio más) y form.reset().
-
+  form.addEventListener("submit", (evento) => {// Añado un eventListener sobre el formulario al hacer submit
+    evento.preventDefault();
+    const datosFormulario = leerFormulario(form); // Guardo los datos del formulario al leer el formulario
+    const errores = validar(datosFormulario); // Obtengo los errores del formulario validando los datos
+    mostrarErrores(form, errores); // Si hay errores los muestro y no hago nada más
+    if (errores == {}) { // Cuando no hayan errores en el formulario:
+      const tarea = tablero.crearTarea((datosFormulario)); // Creo la tarea en el tablero con los datos del formulario
+      tablero.columna("Por hacer").añadir(tarea)// Y lo añado a la columna Por Hacer
+      form.reset(); // Reseteo el form al terminarlo
+    }
+  }
+)
   return { pintar };
 }
 
