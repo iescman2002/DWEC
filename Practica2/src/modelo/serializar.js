@@ -28,7 +28,7 @@ export function aDatos(tarea) {
 //   (cada campo a su sitio en el constructor, también el id)
 export function desdeDatos(datos) {
   let tarea;
-  if (datos.cadaDias == null) { // Con == compara si es undefined tambien, si no existe cadaDias creo tarea normal
+  if (datos.cadaDias === null || datos.cadaDias === undefined) { // si no existe cadaDias creo tarea normal
     tarea = new Tarea(datos.titulo, datos.prioridad, datos.limite, datos.id);
   }
   else { // Si cadaDias existe po entonces creo TareaRecurrente
