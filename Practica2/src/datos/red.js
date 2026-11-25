@@ -14,7 +14,7 @@ export async function obtenerJSON(url, fetchFn = fetch) {
   }
   // Si la cabecera de la respuesta no incluye application/json:
   if (!respuesta.headers.get("content-type").includes("application/json")) {
-    throw new Error(`${url}`) // Tiro error
+    throw new Error(`JSON No válido: ${url}`) // Tiro error
   }
   return respuesta.json() // Devuelvo el json como respuesta
 }
