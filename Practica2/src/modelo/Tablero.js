@@ -198,7 +198,32 @@ export class Tablero {
   // ✍️ C4 (bloque C) ────────────────────────────────────────────────────────────
   // toJSON(): { version, limiteEnCurso, columnas: { "Por hacer": [datos…], … } }
   //   JSON.stringify(tablero) lo llama solo. Sin él sale "{}": los # no se ven. Usa aDatos.
-
+  toJSON() {
+    const version = Tablero.VERSION_DATOS;
+    const limiteEnCurso = this.columna("En curso").limiteWip;
+    const datosTareasPorHacer = [];
+    const datosTareasEnCurso = [];
+    const datosTareasHecho = [];
+    for (const columna of this.#columnas.values()) { // Recorro las 3 columnas del tablero
+      for (const tarea of columna.tareas) { // De cada columna recorro sus tareas
+        const datosTarea = aDatos(tarea); // Convertimos cada tarea de la columna a json
+        // Depende de la columna que sea guardaremos los datos de la tarea en un array con los datos de la tarea correspondiente a cada columna.
+        if (columna.nombre === "Por Hacer") datosTareasPorHacer.push(datosTarea);
+        else if (columna.nombre === "En curso") datosTareasEnCurso.push(datosTarea);
+        else datosTareasHecho.push(datosTarea);
+      }
+    }
+    const json = {
+      "version": version,
+      "limiteEnCurso": limiteEnCurso,
+      "columnas": {
+        "Por hacer": datosTareasPorHacer,
+        "En curso": datosTareasEnCurso,
+        "Hecho": datosTareasHecho,
+      }
+    };
+    return json;
+  }
   /** Lo contrario de toJSON: el MISMO tablero (columnas, ids y límite WIP). Lanza si no encaja. */
   static desdeJSON(datos) {
     throw new Error("Sin hacer");
