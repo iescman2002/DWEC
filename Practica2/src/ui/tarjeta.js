@@ -31,7 +31,7 @@ export function pintarLista(contenedor, tareas, hoy = new Date()) {
   // Si las tareas estan vacias:
   if (tareas.length === 0) {
     const etiqueta = document.createElement("p"); // Creo el elemento <p>
-    etiqueta.className = "vacia" // Le asigno la clase vacia
+    etiqueta.className = "vacia"; // Le asigno la clase vacia
     etiqueta.textContent = "Sin tareas"; // Le meto el texto "Sin tareas"
     contenedor.append(etiqueta); // Lo añado al contenedor .lista
   }

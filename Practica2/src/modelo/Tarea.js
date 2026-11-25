@@ -17,18 +17,19 @@ export class Tarea {
   // new Tarea("Preparar la demo", "alta", "2026-11-05") · new Tarea("Escribir el README")
   // Los parámetros con = tienen valor por defecto: si no los pasas, prioridad "media" y sin límite.
   // (Bloque C · ✍️ C3: aquí añadirás un cuarto parámetro, el id, para recuperar las tareas guardadas)
-  constructor(titulo, prioridad = "media", limite = null, id=null) {
+  constructor(titulo, prioridad = "media", limite = null, id = null) {
     // Si no indicamos id (id nulo) -> Creamos el id como antes con siguienteId++
-    if (id === null) { 
+    if (id === null) {
       this.id = Tarea.#siguienteId++;
     }
     // Si el id no es nulo pero no es un entero o vale menos que 1
-    else if(!Number.isInteger(id) || id < 1) {
-      throw new RangeError(`Error: el id ${id} debe de ser un entero mayor que 0.`)
+    else if (!Number.isInteger(id) || id < 1) {
+      throw new RangeError(`Error: el id ${id} debe de ser un entero mayor que 0.`);
     }
     // Si el id que le pasamos es válido:
     else {
-      if (id >= Tarea.#siguienteId) { // Cuando el id de la tarea sea >= que el siguienteId (flujo normal -> siguienteId = 5 y id = 15 pues siguienteId salta a 16)
+      if (id >= Tarea.#siguienteId) {
+        // Cuando el id de la tarea sea >= que el siguienteId (flujo normal -> siguienteId = 5 y id = 15 pues siguienteId salta a 16)
         Tarea.#siguienteId = id + 1; // Saltamos el numero del id en el contador para no crear tareas con el mismo id
       }
       // Si el id fuera < que Tarea.#siguienteId (ej: id = 5 siguienteId= 15 pues siguienteId seguirá siendo 15 y el se saltará)

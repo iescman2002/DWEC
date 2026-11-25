@@ -16,8 +16,10 @@ export class Tablero {
   constructor(limiteEnCurso = 3) {
     this.#columnas = new Map();
     // Crea las tres columnas; solo «En curso» lleva límite WIP (limiteEnCurso)
-    for (const columna of Tablero.COLUMNAS) { // Recorro los 3 tipos de columnas existentes (la llamo mediante el objeto tablero porque es un atributo estatico)
-      const obj_columna = columna === "En curso" ? new Columna(columna, limiteEnCurso) : new Columna(columna); // Creo el objeto columna, Si la columna es En curso le establezco limiteWIP, sino sin limite.
+    for (const columna of Tablero.COLUMNAS) {
+      // Recorro los 3 tipos de columnas existentes (la llamo mediante el objeto tablero porque es un atributo estatico)
+      const obj_columna =
+        columna === "En curso" ? new Columna(columna, limiteEnCurso) : new Columna(columna); // Creo el objeto columna, Si la columna es En curso le establezco limiteWIP, sino sin limite.
       this.#columnas.set(columna, obj_columna); // Le añado como clave el tipo de columna y como valor la columna propia
     }
   }
@@ -40,27 +42,34 @@ export class Tablero {
   columna(nombre) {
     // Buscar en el mapa columnas la clave columna que sea === a nombre
     const columnaEncontrada = this.#columnas.has(nombre);
-    if (!columnaEncontrada) { // Si no se ha encontrado columna (columnaEncontrada = False) -> Devuelve el error
+    if (!columnaEncontrada) {
+      // Si no se ha encontrado columna (columnaEncontrada = False) -> Devuelve el error
       throw new Error(`Error: No se ha encontrado el nombre ${nombre} de la columna.`);
-    }
-    else { // Si se ha encontrado una columna (columnaEncontrada = True) -> Devuelve la columna encontrada
+    } else {
+      // Si se ha encontrado una columna (columnaEncontrada = True) -> Devuelve la columna encontrada
       return this.#columnas.get(nombre);
     }
   }
   // get columnas: array con las tres columnas, en orden
   get columnas() {
-    return [...this.#columnas.values()]
+    return [...this.#columnas.values()];
   }
   // crearTarea(datos): TareaRecurrente si datos trae cadaDias, Tarea si no → a «Por hacer»
   //   y la devuelve. datos es un objeto { titulo, prioridad, limite, cadaDias }: saca cada campo
   //   y pásaselo al constructor, en su orden (new Tarea(datos) NO vale: espera el título)
   crearTarea(datos) {
-    let tarea = undefined
-    if (datos["cadaDias"] !== undefined) { // Si los datos traen cadaDias -> creo TareaRecurrente
-      tarea = new TareaRecurrente(datos["titulo"],datos["prioridad"],datos["limite"],datos["cadaDias"])
-    }
-    else { // Si los datos no traen cadaDias -> creo Tarea 
-      tarea = new Tarea(datos["titulo"],datos["prioridad"],datos["limite"])
+    let tarea = undefined;
+    if (datos["cadaDias"] !== undefined) {
+      // Si los datos traen cadaDias -> creo TareaRecurrente
+      tarea = new TareaRecurrente(
+        datos["titulo"],
+        datos["prioridad"],
+        datos["limite"],
+        datos["cadaDias"],
+      );
+    } else {
+      // Si los datos no traen cadaDias -> creo Tarea
+      tarea = new Tarea(datos["titulo"], datos["prioridad"], datos["limite"]);
     }
     return tarea;
   }
@@ -69,10 +78,11 @@ export class Tablero {
   buscar(id) {
     const columna = this.dondeEsta(id); // Obtengo la columna donde se encuentra la tarea
     if (columna !== null) {
-      const tarea = columna.tareas.find(tarea => tarea.id === id); // Busco la tarea por el id
-        if (tarea) { // Si tarea no es null
-          return tarea; // Devuelvo la tarea
-        }
+      const tarea = columna.tareas.find((tarea) => tarea.id === id); // Busco la tarea por el id
+      if (tarea) {
+        // Si tarea no es null
+        return tarea; // Devuelvo la tarea
+      }
       //Si no se ha encontrado la tarea, devuelvo null
     }
     return null;
@@ -82,8 +92,9 @@ export class Tablero {
   dondeEsta(id) {
     const columnas = this.#columnas.values();
     for (const columna of columnas) {
-      const tarea = columna.tareas.find(tarea => tarea.id === id); // Busco la tarea por el id
-      if (tarea) { // Si tarea no es null (es decir que la ha encontrado)
+      const tarea = columna.tareas.find((tarea) => tarea.id === id); // Busco la tarea por el id
+      if (tarea) {
+        // Si tarea no es null (es decir que la ha encontrado)
         return columna; // Devuelvo la columna
       }
     }
@@ -97,26 +108,27 @@ export class Tablero {
     const columnaDestino = this.#columnas.get(destino);
     const tarea = this.buscar(id);
     // 2. Hago las verificaciones antes de trabajar con las tablas
-    this.#trasladar(id,destino);
+    this.#trasladar(id, destino);
     // 3. Quito la tarea de su origen
     columnaOrigen.quitar(id);
     // 4. Añado la tarea a la columna de destino
     columnaDestino.añadir(tarea);
     // 5. Devuelvo la tarea añadida
-    return tarea
+    return tarea;
   }
   // completar(id): la mueve a «Hecho» y añade a «Por hacer» lo que devuelva tarea.alCompletar()
   //   ⚠️ Sin preguntar si es recurrente: eso es el polimorfismo
   completar(id) {
     // 0. Paso todas las verificaciones existentes desde mover:
-    this.#trasladar(id,"Hecho")
+    this.#trasladar(id, "Hecho");
     // Obtengo la tarea
     const tarea = this.buscar(id);
     // Muevo la tarea a la columna "Hecho"
-    this.mover(id,"Hecho");
+    this.mover(id, "Hecho");
     // Recorro la lista de tareas que obtengo al completar una tarea
     const tareasAlCompletar = tarea.alCompletar();
-    for (const tareaNueva of tareasAlCompletar) { // Si es Tarea -> tarea.alCompletar() no se ejecuta porque no hay tareas.
+    for (const tareaNueva of tareasAlCompletar) {
+      // Si es Tarea -> tarea.alCompletar() no se ejecuta porque no hay tareas.
       // Añado a la columna "Por hacer" lo que devuelve alCompletar()
       this.#columnas.get("Por hacer").añadir(tareaNueva);
     }
@@ -127,14 +139,14 @@ export class Tablero {
   resumen(hoy = new Date()) {
     // Inicializo el resumen con los datos de las columnas en 0:
     const resumen = {
-      "enCurso": 0,
-      "hecho": 0,
-      "porHacer": 0,
-      "vencidas": 0
+      enCurso: 0,
+      hecho: 0,
+      porHacer: 0,
+      vencidas: 0,
     };
     // Recorro todas las columnas del tablero
     for (const columna of this.#columnas.values()) {
-    // Recorro las tareas de cada columna para ver cual está vencida y cual no
+      // Recorro las tareas de cada columna para ver cual está vencida y cual no
       for (const tarea of columna.tareas) {
         // Si la tarea está vencida y no está en la columna Hecho:
         if (tarea.estaVencida(hoy) && columna.nombre !== "Hecho") {
@@ -145,11 +157,9 @@ export class Tablero {
       // Lo hago con mil ifs para pasar los tests correctamente
       if (columna.nombre === "Por hacer") {
         resumen["porHacer"] = columna.tareas.length;
-      }
-      else if (columna.nombre === "En curso") {
+      } else if (columna.nombre === "En curso") {
         resumen["enCurso"] = columna.tareas.length;
-      }
-      else if (columna.nombre === "Hecho") {
+      } else if (columna.nombre === "Hecho") {
         resumen["hecho"] = columna.tareas.length;
       }
     }
@@ -170,29 +180,26 @@ export class Tablero {
         break;
       }
     }
-    const columnaDestino = this.#columnas.get(destino)
+    const columnaDestino = this.#columnas.get(destino);
     // 0. Compruebo que la tarea exista y que esté en una columna existente:
     if (columnaOrigen !== null && columnaOrigen !== undefined) {
       // 0.5 Compruebo que la columna de destino exista:
       if (columnaDestino !== null && columnaDestino !== undefined) {
         // 1. Compruebo que la tarea NO esté en la columna "Hecho" (si está en "Hecho" no podrá ni mover ni completarse):
         // 1. Compruebo también que la columna donde está la tarea no sea la misma que columna del destino:
-        if ((columnaOrigen.nombre === "Hecho") || (columnaOrigen.nombre === destino)) {
-          throw new MovimientoNoPermitidoError(id, destino,destino);
+        if (columnaOrigen.nombre === "Hecho" || columnaOrigen.nombre === destino) {
+          throw new MovimientoNoPermitidoError(id, destino, destino);
         }
         // 2. Compruebo si voy a mover una tarea a una columna que ya está llena:
         if (columnaDestino.llena) {
-          throw new ColumnaLlenaError(columnaDestino)
+          throw new ColumnaLlenaError(columnaDestino);
         }
         // 3. Compruebo que la tarea que voy a mover no esté en la columna "Hecho":
-
-        }
-        else {
-          throw new Error(`La columna de destino ${destino} no existe.`)
-        }
-    }
-    else {
-      throw new Error(`La tarea ${id} no existe.`)
+      } else {
+        throw new Error(`La columna de destino ${destino} no existe.`);
+      }
+    } else {
+      throw new Error(`La tarea ${id} no existe.`);
     }
   }
   // ✍️ C4 (bloque C) ────────────────────────────────────────────────────────────
@@ -204,8 +211,10 @@ export class Tablero {
     const datosTareasPorHacer = [];
     const datosTareasEnCurso = [];
     const datosTareasHecho = [];
-    for (const columna of this.#columnas.values()) { // Recorro las 3 columnas del tablero
-      for (const tarea of columna.tareas) { // De cada columna recorro sus tareas
+    for (const columna of this.#columnas.values()) {
+      // Recorro las 3 columnas del tablero
+      for (const tarea of columna.tareas) {
+        // De cada columna recorro sus tareas
         const datosTarea = aDatos(tarea); // Convertimos cada tarea de la columna a json
         // Depende de la columna que sea guardaremos los datos de la tarea en un array con los datos de la tarea correspondiente a cada columna.
         if (columna.nombre === "Por hacer") datosTareasPorHacer.push(datosTarea);
@@ -214,13 +223,13 @@ export class Tablero {
       }
     }
     const json = {
-      "version": version,
-      "limiteEnCurso": limiteEnCurso,
-      "columnas": {
+      version: version,
+      limiteEnCurso: limiteEnCurso,
+      columnas: {
         "Por hacer": datosTareasPorHacer,
         "En curso": datosTareasEnCurso,
-        "Hecho": datosTareasHecho,
-      }
+        Hecho: datosTareasHecho,
+      },
     };
     return json;
   }

@@ -34,11 +34,11 @@ export function mostrarErrores(form, errores) {
     // Si existe un error con el campo
     if (errores[campo]) {
       p.textContent = errores[campo]; // EL texto del p será el el error del campo
-      control.setAttribute("aria-invalid","true"); // Pongo el atributo aria-invalid como true
+      control.setAttribute("aria-invalid", "true"); // Pongo el atributo aria-invalid como true
     }
     // Si no hay error en el campo:
     else {
-      p. textContent = ""; // El p vacio
+      p.textContent = ""; // El p vacio
       control.removeAttribute("aria-invalid"); // Y elimino el atributo aria-invalid
     }
   }

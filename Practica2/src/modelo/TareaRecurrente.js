@@ -7,12 +7,13 @@ import { Tarea } from "./Tarea.js";
 export class TareaRecurrente extends Tarea {
   // new TareaRecurrente("Sacar la basura", "media", "2026-10-23", 7): lo mismo que una Tarea + cadaDias
   // (Bloque C · ✍️ C3: añadirás un quinto parámetro, id = null, y se lo pasarás también al super)
-  constructor(titulo, prioridad, limite, cadaDias, id=null) {
+  constructor(titulo, prioridad, limite, cadaDias, id = null) {
     // 2 · Llama al constructor del padre (super) con lo que es de Tarea, ANTES de usar this.
-    super(titulo,prioridad,limite, id);
+    super(titulo, prioridad, limite, id);
     // 3 · cadaDias tiene que ser un entero ≥ 1 → si no, RangeError.
     //     Pista: Number.isInteger
-    if (!Number.isInteger(cadaDias) || cadaDias === 0) { // Comparo si cadaDias es == 0 porque la función is Integer devuelve 0 como entero y quiero los > 1
+    if (!Number.isInteger(cadaDias) || cadaDias === 0) {
+      // Comparo si cadaDias es == 0 porque la función is Integer devuelve 0 como entero y quiero los > 1
       throw new RangeError("El valor de cadaDias no es un entero (<1).");
     }
     // 4 · Una recurrente sin límite no tiene sentido → si this.limite es null, TypeError.
@@ -31,18 +32,18 @@ export class TareaRecurrente extends Tarea {
     //     y el límite cadaDias días después. ⚠️ Sin tocar this.limite: copia la fecha primero.
     //     Pista: const limite = new Date(this.limite); limite.setDate(limite.getDate() + …)
     const limite = new Date(this.limite);
-    limite.setDate(limite.getDate()+cadaDias)
-    const tareaNueva = new TareaRecurrente(titulo,prioridad,limite,cadaDias)
-    return tareaNueva
+    limite.setDate(limite.getDate() + cadaDias);
+    const tareaNueva = new TareaRecurrente(titulo, prioridad, limite, cadaDias);
+    return tareaNueva;
   }
   // 7 · Sobrescribe alCompletar(): en vez de [], devuelve [la siguiente].
   alCompletar() {
-    return [this.siguiente()]
+    return [this.siguiente()];
   }
 
   // 8 · Sobrescribe toString(): lo del padre + " · 🔁 cada N días".
   toString() {
-    return `${super.toString()} · 🔁 cada ${this.cadaDias} días`
+    return `${super.toString()} · 🔁 cada ${this.cadaDias} días`;
   }
 }
 

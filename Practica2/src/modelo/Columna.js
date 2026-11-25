@@ -8,10 +8,12 @@ export class Columna {
   #tareas = [];
   constructor(nombre, limiteWip = null) {
     // 1 · nombre: texto no vacío (sin espacios a los lados) → si no, TypeError
-    if (typeof nombre !== "string" || nombre === "") {throw new TypeError("El Nombre introducido no es válido.")};
+    if (typeof nombre !== "string" || nombre === "") {
+      throw new TypeError("El Nombre introducido no es válido.");
+    }
     //     limiteWip: null (sin límite) o un entero ≥ 1 → si no, RangeError
     if (limiteWip !== null && (!Number.isInteger(limiteWip) || limiteWip < 1)) {
-      throw new RangeError("El limiteWip no es válido.")
+      throw new RangeError("El limiteWip no es válido.");
     }
 
     this.nombre = nombre.trim();
@@ -24,19 +26,18 @@ export class Columna {
   }
   // 3 · get tareas: una COPIA del array (que nadie pueda tocar el tuyo desde fuera)
   get tareas() {
-    return [...this.#tareas]
+    return [...this.#tareas];
   }
   // 4 · añadir(tarea): TypeError si no es instanceof Tarea · Error («… está llena …») si está
   //     llena · si no, la guarda y la devuelve
   añadir(tarea) {
-    
-    if (!(tarea instanceof Tarea)) { // Si la tarea que le pasamos no contiene la estructura del objeto Tarea:
-      throw new TypeError("La tarea pasada no es instancia de Tarea.")
-    }
-    else if (this.llena) { // Si la cola está llena
-      throw new Error("La cola de tareas está llena.")
-    }
-    else {
+    if (!(tarea instanceof Tarea)) {
+      // Si la tarea que le pasamos no contiene la estructura del objeto Tarea:
+      throw new TypeError("La tarea pasada no es instancia de Tarea.");
+    } else if (this.llena) {
+      // Si la cola está llena
+      throw new Error("La cola de tareas está llena.");
+    } else {
       this.#tareas.push(tarea);
       return tarea;
     }
@@ -44,23 +45,23 @@ export class Columna {
   // 5 · quitar(id): la saca del array y la devuelve · Error («… no está …») si no la encuentra
   //     Pista: findIndex + splice
   quitar(id) {
-    const posicion = this.#tareas.findIndex(tarea => tarea.id === id);
+    const posicion = this.#tareas.findIndex((tarea) => tarea.id === id);
     if (posicion === -1) {
-      throw new Error("El id introducido no está en la lista de tareas.")
+      throw new Error("El id introducido no está en la lista de tareas.");
     }
     const tareaAEliminar = this.#tareas[posicion];
     this.#tareas.splice(posicion, 1);
     return tareaAEliminar;
   }
   // 6 · tiene(id): true / false. Pista: some
-  tiene (id) {
-    return this.#tareas.some(tarea => tarea.id === id);
+  tiene(id) {
+    return this.#tareas.some((tarea) => tarea.id === id);
   }
   // 7 · ordenadas(): un array NUEVO ordenado: primero prioridad alta (usa t.peso), y a igual
   //     prioridad, el límite más cercano; las que no tienen límite, al final.
   //     Pista: [...this.#tareas].sort((a, b) => …) — ¿por qué la copia?
   ordenadas() {
-    const ordenadasPorPeso = [...this.#tareas].sort((a,b) => {
+    const ordenadasPorPeso = [...this.#tareas].sort((a, b) => {
       // Ordeno por peso de mayor a menor
       if (b.peso - a.peso !== 0) {
         return b.peso - a.peso;
@@ -74,7 +75,7 @@ export class Columna {
       }
       // 2: Si la tarea a no tiene limite, entonces la tarea b tendrá prioridad:
       else if (a.limite === null) {
-        return 1; // Prioriza la tarea B (return b - a) 
+        return 1; // Prioriza la tarea B (return b - a)
       }
       // 3: Si la tarea b no tiene limite, entonces la tarea a tendrá prioridad:
       else if (b.limite === null) {
