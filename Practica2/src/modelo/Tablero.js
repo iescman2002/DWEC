@@ -208,7 +208,7 @@ export class Tablero {
       for (const tarea of columna.tareas) { // De cada columna recorro sus tareas
         const datosTarea = aDatos(tarea); // Convertimos cada tarea de la columna a json
         // Depende de la columna que sea guardaremos los datos de la tarea en un array con los datos de la tarea correspondiente a cada columna.
-        if (columna.nombre === "Por Hacer") datosTareasPorHacer.push(datosTarea);
+        if (columna.nombre === "Por hacer") datosTareasPorHacer.push(datosTarea);
         else if (columna.nombre === "En curso") datosTareasEnCurso.push(datosTarea);
         else datosTareasHecho.push(datosTarea);
       }
@@ -226,7 +226,23 @@ export class Tablero {
   }
   /** Lo contrario de toJSON: el MISMO tablero (columnas, ids y límite WIP). Lanza si no encaja. */
   static desdeJSON(datos) {
-    throw new Error("Sin hacer");
+    // Si los datos son de otra version o no tienen versión -> Lanzo error
+    if (datos.version !== Tablero.VERSION_DATOS) {
+      throw new Error("Versión de datos incompatible.");
+    }
+    const limiteWip = datos.limiteEnCurso;
+    const columnas = datos.columnas;
+    const tablero = new Tablero(limiteWip);
+    // Recorro las columnas que he extraido de los datos
+    for (const nombreColumna of Object.keys(columnas)) {
+      const columna = tablero.columna(nombreColumna); // Obtengo la columna sobre la que voy a cargar las tareas.
+      // Recorro las tareas de cada columna para añadirla a la columna
+      for (const datosTarea of columnas[nombreColumna]) {
+        const tarea = desdeDatos(datosTarea);
+        columna.añadir(tarea); // Añado las tareas a la columna del tablero
+      }
+    }
+    return tablero;
   }
 }
 

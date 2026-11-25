@@ -28,7 +28,10 @@ export class Tarea {
     }
     // Si el id que le pasamos es válido:
     else {
-      Tarea.#siguienteId = id + 1; // Saltamos el numero del id en el contador para no crear tareas con el mismo id
+      if (id >= Tarea.#siguienteId) { // Cuando el id de la tarea sea >= que el siguienteId (flujo normal -> siguienteId = 5 y id = 15 pues siguienteId salta a 16)
+        Tarea.#siguienteId = id + 1; // Saltamos el numero del id en el contador para no crear tareas con el mismo id
+      }
+      // Si el id fuera < que Tarea.#siguienteId (ej: id = 5 siguienteId= 15 pues siguienteId seguirá siendo 15 y el se saltará)
       this.id = id;
     }
     this.titulo = titulo; // pasa por el setter: se valida también al crear
