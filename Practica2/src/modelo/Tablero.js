@@ -118,9 +118,7 @@ export class Tablero {
     const columnaOrigen = this.dondeEsta(id);
     const columnaDestino = this.#columnas.get(destino);
     const tarea = this.buscar(id);
-    if (tarea instanceof TareaConAgenda) {
-      tarea.comprobarPaso(columnaOrigen);
-    }
+    tarea.comprobarPaso(columnaOrigen.nombre, columnaDestino);
     // 2. Hago las verificaciones antes de trabajar con las tablas
     this.#trasladar(id, destino);
     // 3. Quito la tarea de su origen

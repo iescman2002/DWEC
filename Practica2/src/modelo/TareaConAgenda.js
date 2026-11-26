@@ -25,13 +25,14 @@ export class TareaConAgenda extends Tarea {
     }
 
     get puntos() {
-        return this.#puntos;
+        return this.#puntos.map((x) => ({...x}));
     }
     set puntos(valor) {
         this.#puntos = valor;
     }
-    comprobarPaso(desde) {
-        const total = this.#puntos.reduce((suma, p) => suma + p.minutos, 0);
-        if (desde === "Por hacer" && (total === 0 || total > this.#duracion)) throw new AgendaNoValidaError(total, this.#duracion);
+    comprobarPaso(desde, hasta) {
+        if (desde !== "Por hacer") return;        // la regla es para EMPEZAR
+        const minutos = this.#puntos.reduce((suma, p) => suma + p.minutos, 0);
+        if (minutos === 0 || minutos > this.#duracion) throw new AgendaNoValidaError(minutos, this.#duracion);
   }
 }
