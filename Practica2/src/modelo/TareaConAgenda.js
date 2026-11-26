@@ -11,19 +11,13 @@ export class TareaConAgenda extends Tarea {
     }
     
     planificar(nombre, minutos) {
-        if (!Number.isInteger(minutos) || minutos < 1) throw new RangeError("Error: Minutos no validos.")
-        let minutos_totales = 0; // Obtengo la suma de minutos totales de los puntos
-        for (punto of puntos) {
-            minutos_totales += minutos_totales + punto.minutos;
+        if (!Number.isInteger(minutos) || minutos < 1) throw new RangeError("Error: Minutos no validos."); // Válido los minutos que sea entero > 1
+        for (const punto of puntos) { // Válido que el nombre no exista ya en el punto
+            if (punto.nombre == nombre) {
+                throw RangeError("El nombre introducido ya existe.");
+            } 
         }
-        // Si hay mas minutos totales que la duracion
-        if (minutos_totales > minutos_totales) {
-            throw AgendaNoValidaError(error.minutos, error.duracion);
-        }
-        // Si la suma delos minutos totales es < que la duración, entonces puedo añadir la planificacion a los puntos
-        else {
-            this.#puntos.push({nombre, minutos})
-        }
+        this.#puntos.push({nombre, minutos});
     }
 
     get duracion() { // Sin setter para que sea solo de lectura
@@ -36,4 +30,8 @@ export class TareaConAgenda extends Tarea {
     set puntos(valor) {
         this.#puntos = valor;
     }
+    comprobarPaso(desde) {
+        const total = this.#puntos.reduce((suma, p) => suma + p.minutos, 0);
+        if (desde === "Por hacer" && (total === 0 || total > this.#duracion)) throw new AgendaNoValidaError(total, this.#duracion);
+  }
 }
