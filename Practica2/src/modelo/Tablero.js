@@ -118,9 +118,10 @@ export class Tablero {
     const columnaOrigen = this.dondeEsta(id);
     const columnaDestino = this.#columnas.get(destino);
     const tarea = this.buscar(id);
-    tarea.comprobarPaso(columnaOrigen.nombre, columnaDestino);
     // 2. Hago las verificaciones antes de trabajar con las tablas
     this.#trasladar(id, destino);
+    // Defensa:
+    tarea.comprobarPaso(columnaOrigen.nombre, columnaDestino);
     // 3. Quito la tarea de su origen
     columnaOrigen.quitar(id);
     // 4. Añado la tarea a la columna de destino

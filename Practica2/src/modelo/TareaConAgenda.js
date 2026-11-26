@@ -1,4 +1,5 @@
 import {AgendaNoValidaError} from "./errores.js";
+import { Tarea } from "./Tarea.js";
 
 export class TareaConAgenda extends Tarea {
     
