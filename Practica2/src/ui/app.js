@@ -5,7 +5,7 @@ import { ErrorTablero } from "../modelo/errores.js";
 import { delegar } from "./delegacion.js";
 import { leerFormulario, mostrarErrores } from "./formulario.js";
 import { pintarLista } from "./tarjeta.js";
-
+import {parsearFecha} from "../modelo/fechas.js"
 /** Botones de cada tarjeta según su columna: [texto, data-accion] */
 const ACCIONES = {
   "Por hacer": [["Empezar →", "empezar"]],
@@ -48,6 +48,28 @@ export function validar(datos) {
  * pintar() solo cambia nodos, así que repintar no los duplica.
  * opciones.hoy: fecha fija para los tests · opciones.alCambiar(tablero): tras cada cambio (UD6)
  */
+function crearBoton(texto, accion) {
+  const boton = document.createElement("button");   // 1. crea un <button> vacío (aún no está en la página)
+  boton.type = "button";                              // 2. type="button": así NO envía el formulario
+  boton.textContent = texto;                          // 3. el texto que se ve
+  boton.dataset.accion = accion;                      // 4. data-accion="…": lo que lee tu listener de clics
+  return boton;                                       // 5. lo devuelve; quien la llama decide dónde ponerlo (append)
+}
+const crear = (etiqueta, datos) => Object.assign(document.createElement(etiqueta), datos);
+function crearFormulario(tarea) {
+  const form = crear("form", { noValidate: true });
+  form.dataset.form = "fecha";
+  const etiqueta = crear("label", { textContent: `Fecha límite nueva de «${tarea.titulo}»` });
+  etiqueta.append(
+    crear("input", { name: "limite", type: "date", value: fechaATexto(tarea.limite) }),
+  );
+  const error = crear("p", { className: "error" });
+  error.dataset.errorDe = "limite";
+  const enviar = crear("button", { type: "submit", textContent: "Guardar" });
+  form.append(etiqueta, error, enviar, crearBoton("Cancelar", "cancelar"));
+  return form;
+}
+
 export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } = {}) {
   const form = raiz.querySelector("#form-alta");
   const aviso = raiz.querySelector("#aviso");
@@ -98,7 +120,16 @@ export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } =
             boton.textContent = textoBoton;
             boton.setAttribute("type", "button");
             boton.setAttribute("data-accion", accion);
-            tarjeta.append(boton); // Añado el boton a la .tarjeta de la columna
+            const tarea = tablero.buscar(Number(tarjeta.dataset.id));
+            if (columna.nombre === "Por hacer" && tarea.limite) {
+              tarjeta.append(crearBoton("Cambiar fecha y empezar", "fecha"));
+            }
+            if (accion === "fecha") {
+              crearFormulario(tarea);
+              return;
+            }
+            if (accion === "cancelar") return columnas.querySelector("form")?.remove();
+            tarjeta.append(crearBoton(textoBoton, accion)); // Añado el boton a la .tarjeta de la columna
           }
         }
       }
@@ -207,7 +238,24 @@ export function iniciarApp(raiz, tablero, { hoy = null, alCambiar = () => {} } =
     evento.preventDefault(); // Para no recargar la página al enviar el formulario
     cambiar("submit");
   });
+
+  delegar(columnas, "submit", "form", (formulario, evento) => {
+    evento.preventDefault();                                    // sin recargar la página
+    const tarea = tablero.buscar(Number(formulario.closest(".tarjeta").dataset.id));
+    const valor = formulario.elements.limite.value.trim();     // SIEMPRE un string
+    const mensaje = revisar(valor, tarea, tablero, hoy ?? new Date());
+    mostrarErrores(formulario, { limite: mensaje });          // pinta o borra el mensaje bajo el campo
+    if (mensaje === "") cambiar(() => aplicar(tablero, tarea, valor));
+  });
   return { pintar };
 }
-
+function revisar(valor, tarea, tablero, hoy) {
+  parsearFecha(hoy); // TU TURNO: las dos comprobaciones del punto 4 del enunciado, con sus mensajes EXACTOS
+  return "";
+}
+function aplicar(tablero, tarea, valor) {
+  tablero.mover(tarea.id, "En curso");   // PRIMERO mover: si «En curso» está llena, lanza y no se ha tocado nada
+  // TU TURNO: cambia el dato de la tarea
+  tarea.limite = valor;
+}
 (void ACCIONES, ErrorTablero, delegar, leerFormulario, mostrarErrores, pintarLista); // (borra esta línea cuando los uses)
