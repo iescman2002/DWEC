@@ -4,6 +4,7 @@
 import { Columna } from "./Columna.js";
 import { ColumnaLlenaError, MovimientoNoPermitidoError } from "./errores.js";
 import { Tarea } from "./Tarea.js";
+import { TareaConAgenda } from "./TareaConAgenda.js";
 import { TareaRecurrente } from "./TareaRecurrente.js";
 import { aDatos, desdeDatos } from "./serializar.js";
 
@@ -67,7 +68,17 @@ export class Tablero {
         datos["limite"],
         datos["cadaDias"],
       );
-    } else {
+    }
+    // Si los datos traen duracion -> Creo TareaConAgenda
+    else if (datos["duracion"] !== undefined) {
+      tarea = new TareaConAgenda(
+        datos["titulo"],
+        datos["prioridad"],
+        datos["limite"],
+        datos["duracion"]
+      );
+    }
+    else {
       // Si los datos no traen cadaDias -> creo Tarea
       tarea = new Tarea(datos["titulo"], datos["prioridad"], datos["limite"]);
     }

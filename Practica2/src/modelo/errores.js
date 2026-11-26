@@ -38,3 +38,11 @@ export class MovimientoNoPermitidoError extends ErrorTablero {
     this.hasta = hasta;
   }
 }
+
+export class AgendaNoValidaError extends ErrorTablero {
+  constructor(minutos, duracion) {
+    super(`Error: Los minutos son ${minutos} y no puede ser superior a la duración ${duracion}.`);
+    this.minutos = minutos;
+    this.duracion = duracion;
+  }
+}
